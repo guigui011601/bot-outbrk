@@ -1,0 +1,378 @@
+/adminreinitialiser anniversaires
+Réinitialiser les anniversaires du serveur.
+/adminreinitialiser infractions
+Réinitialiser les infractions du serveur ou d'un membre.
+/adminreinitialiser sanctions
+Réinitialiser les sanctions du serveur ou d'un membre.
+/botinfo
+Afficher quelques informations concernant le bot.
+/config
+Configurer le bot pour le serveur.
+/panel
+Recevoir un lien vers le panel.
+/aide
+Afficher la liste des commandes.
+/ping
+Vérifier le ping du bot sur son serveur Discord.
+/premium activer
+Activer votre abonnement premium sur un serveur.
+/premium codes
+Afficher son inventaire de codes premium. (visible seulement par vous)
+/premium désactiver
+Désactiver votre abonnement premium sur un serveur.
+/premium infos
+Connaître l'état de son abonnement premium.
+/statuts
+Afficher quelques informations concernant les clusters et shards.
+/support diagnostic
+Afficher des informations de diagnostique pour recevoir de l'aide sur le support.
+/support invite
+Recevoir une invitation pour rejoindre le support.
+/votes
+Afficher les meilleurs votants du mois.
+Modération
+Nom
+Description
+/ban
+Bannir un membre.
+/infractions ajouter
+Ajouter une infraction à un membre.
+/infractions lister
+Afficher les infractions.
+/infractions retirer
+Retirer des infractions à un membre.
+/expulser
+Exclure un membre.
+/mod
+Infliger une sanction à un utilisateur.
+/mute
+Réduire au silence un membre.
+/normaliser
+Retirer tous les caractères spéciaux d'un pseudo.
+/note
+Ajouter une note à un utilisateur.
+/sanctions lister
+Afficher l'historique des sanctions.
+/sanctions retirer
+Retirer l'historique d'une sanction d'un utilisateur.
+/roles-permanents ajouter
+Ajouter un rôle permanent à un membre.
+/roles-permanents lister
+Lister tous les rôles permanents d'un membre.
+/roles-permanents retirer
+Retirer un rôle permanent d'un ou plusieurs membres.
+/roles-permanents réinitialiser
+Retirer tous les rôles permanents d'un ou plusieurs membres.
+/role-temporaire
+Ajouter des rôles temporaires à un membre.
+/deban
+Révoquer le bannissement d'un utilisateur.
+/demute
+Retirer la réduction au silence d'un membre.
+/avertir
+Avertir un membre.
+Conversations
+Nom
+Description
+/effacer après
+Supprimer un certain nombre de messages après un message spécifié.
+/effacer conversation
+Supprimer une sélection de messages dans un salon.
+/effacer messages
+Supprimer un certain nombre de messages.
+/vider-salon
+Vider un salon textuel.
+/copier
+Copier des messages dans un autre salon.
+/deplacer
+Déplacer des messages dans un autre salon.
+/citer
+Citer un message du serveur.
+/enregistrer conversation
+Sauvegarder une conversation sous format HTML.
+Interaction
+Nom
+Description
+/emojiperm ajouter
+Réserver un émoji à des rôles.
+/emojiperm effacer
+Retirer les restrictions de rôles à un émoji.
+/emojiperm lister
+Lister toutes les restrictions d'émojis sur le serveur.
+/emojiperm retirer
+Retirer à des rôles l'accès à un émoji.
+/interserveur générer
+Générer une fréquence pour un interserveur.
+/interserveur lier
+Lier ce salon à une fréquence d'interserveur.
+/interserveur gérer
+Gérer la liaison interserveur du salon.
+/rappel créer
+Créer un rappel.
+/rappel supprimer
+Supprimer un rappel.
+/rappel modifier
+Modifier un rappel.
+/rappel liste
+Afficher vos rappels.
+/signaler message
+Soumettre une plainte vis-à-vis d'un message.
+/signaler utilisateur
+Soumettre une plainte vis-à-vis d'un utilisateur.
+/reglement ajouter
+Ajouter une règle à un règlement existant.
+/reglement créer
+Créer un embed de règlement.
+/reglement retirer
+Supprimer une règle d'un règlement existant.
+/reglement modifier
+Modifier une règle d'un règlement existant.
+/suggestion
+Ouvrir le menu des suggestions.
+/suggestmod accepter
+Accepter une suggestion.
+/suggestmod attente
+Repasser une suggestion en attente.
+/suggestmod prevue
+Changer le statut d'une suggestion en prévu.
+/suggestmod refuser
+Refuser une suggestion.
+/suggestmod rechercher
+Rechercher une suggestion. (commande premium)
+/suggestmod classement
+Voir le classement des suggestions du serveur. (commande premium)
+/suggestmod voir
+Voir les dernières suggestions d'un utilisateur.
+/ticket
+Créer un ticket sur le serveur.
+/ticketmod ajouter
+Ajouter un membre à un ticket.
+/ticketmod ouvrir
+Ouvrir un ticket pour un membre.
+/ticketmod retirer
+Retirer un membre d'un ticket.
+Informations
+Nom
+Description
+/description
+Choisir la description de son profil.
+/info salon
+Afficher les informations d'un salon.
+/info émoji
+Afficher les informations d'un émoji.
+/info rôle
+Afficher les informations d'un rôle.
+/info serveur
+Afficher les informations du serveur.
+/info utilisateur
+Afficher les informations d'un utilisateur.
+/localité
+Choisir la localité de son profil.
+/profil
+Afficher le profil d'un utilisateur.
+Niveaux
+Nom
+Description
+/adminxp ajouter
+Ajouter de l'expérience ou des niveaux à un membre.
+/adminxp retirer
+Retirer de l'expérience ou des niveaux à un membre.
+/adminxp réinitialiser
+Réinitialiser l'expérience de tous les membres du serveur.
+/adminxp définir
+Définir l'expérience ou le niveau d'un membre.
+/adminxp transférer
+Transférer de l'expérience entre deux membres.
+/dropxp
+Créer un message qui offre de l'expérience au premier qui clique sur le bouton.
+/niveau
+Afficher votre niveau ou celui d'un utilisateur.
+/recompenses
+Voir les récompenses disponibles lors de gains de niveaux.
+/topniveau
+Afficher le classement des membres en fonction de leur expérience.
+Économie
+Nom
+Description
+/adminargent ajouter
+Ajouter de l'argent à un membre.
+/adminargent retirer
+Retirer de l'argent à un membre.
+/adminargent réinitialiser
+Réinitialiser l'argent de tous les membres du serveur.
+/adminargent définir
+Définir l'argent d'un membre.
+/adminargent transférer
+Transférer de l'argent entre deux membres.
+/journalier
+Récupérer sa somme d'argent quotidienne.
+/dropargent
+Créer un message qui offre de l'argent au premier qui clique sur le bouton.
+/argent
+Afficher votre argent ou celui d'un utilisateur.
+/payer
+Donner de son argent à un membre.
+/boutique
+Afficher la boutique du serveur.
+/topargent
+Afficher le classement des membres en fonction de leur argent.
+Inventaires
+Nom
+Description
+/admininventaire supprimer
+Supprimer définitivement un objet du serveur.
+/admininventaire donner
+Ajouter un objet à l'inventaire d'un membre.
+/admininventaire fusionner
+Fusionner deux objets d'inventaire en un seul.
+/admininventaire retirer
+Retirer des objets d'inventaires.
+/admininventaire renommer
+Renommer un objet dans tous les inventaires du serveur.
+/admininventaire reset
+Réinitialiser l'inventaire d'un membre ou de tout le serveur.
+/dropitem
+Créer un message qui offre un item au premier qui clique sur le bouton.
+/inventaire
+Afficher votre inventaire sur le serveur.
+/objet
+Vendre, échanger, donner ou drop un objet.
+/topitems
+Afficher le nombre d'objets circulants sur le serveur.
+Statistiques
+Nom
+Description
+/profiljeux
+Relier vos profils de jeu à votre profil Discord.
+/stats brawlhalla
+Afficher les statistiques d'un joueur Brawlhalla.
+/stats brawlstars
+Afficher les statistiques d'un joueur Brawl Stars.
+/stats chess
+Afficher les statistiques d'un joueur Chess.com.
+/stats clashofclans
+Afficher les statistiques d'un joueur Clash Of Clans.
+/stats clashroyale
+Afficher les statistiques d'un joueur Clash Royale.
+/stats osu
+Afficher les statistiques d'un joueur osu!
+/stats paladins
+Afficher les statistiques d'un joueur Paladins.
+/stats wolfy
+Afficher les statistiques d'un joueur Wolfy.
+Émotions
+Nom
+Description
+/interact nourrir
+Nourrir quelqu'un.
+/interact caliner
+Envoyer un câlin à quelqu'un.
+/interact embrasser
+Envoyer des bisous à quelqu'un.
+/interact caresser
+Caresser quelqu'un.
+/interact gifler
+Envoyer des gifles à quelqu'un.
+/interact chatouiller
+Chatouiller quelqu'un.
+Jeux
+Nom
+Description
+/bingo
+Jouer au bingo.
+/colormind
+Jouer au ColorMind.
+/puissance4
+Jouer au Puissance 4.
+/pendu
+Jouer au Pendu.
+/demineur
+Générer une grille de démineur.
+/chifumi
+Jouer au Chifumi.
+/morpion
+Jouer au Morpion.
+Fun
+Nom
+Description
+/adminanniversaire supprimer
+Supprimer la date d'anniversaire d'un membre sur le serveur.
+/adminanniversaire définir
+Définir la date d'anniversaire d'un membre sur le serveur.
+/anniversaire activer
+Activer votre anniversaire sur le serveur.
+/anniversaire désactiver
+Désactiver votre anniversaire sur le serveur.
+/anniversaire liste
+Voir les prochains anniversaires à venir.
+/anniversaire retirer
+Retirer votre date d'anniversaire.
+/anniversaire définir
+Définir votre date d'anniversaire sur le serveur.
+/calendrier
+Ouvrir une case du calendrier de l'avent.
+/evenement créer
+Créer et lancer un évènement.
+/evenement terminer
+Mettre fin à un évènement.
+/evenement relancer
+Relancer un évènement.
+/giveaway créer
+Créer et lancer un giveaway sur le serveur.
+/giveaway terminer
+Lancer la fin d'un giveaway.
+/giveaway participants
+Voir les participants d'un giveaway.
+/giveaway relancer
+Désigner un nouveau gagnant pour un giveaway.
+/blague
+Demander une blague.
+/couple
+Trouver le couple parfait.
+/sondage créer
+Créer et lancer un sondage.
+/sondage terminer
+Mettre fin à un sondage.
+/sondage résultats
+Voir les résultats d'un sondage.
+/lancer-dés
+Lanceur de dés (notation de dés).
+/tv
+Recherchez des informations sur vos films et séries préférés.
+Utilitaires
+Nom
+Description
+/avatar
+Afficher l'avatar d'un membre.
+/sauvegarde créer
+Sauvegarder un serveur Discord (informations générales, salons, rôles, rôles des membres).
+/sauvegarde lister
+Lister les sauvegardes faites du serveur.
+/sauvegarde retirer
+Supprimer une sauvegarde du serveur.
+/sauvegarde réinitialiser
+Réinitialiser toutes les sauvegardes du serveur.
+/sauvegarde restaurer
+Restaurer le serveur depuis une sauvegarde.
+/couleur
+Générer ou afficher une couleur.
+/embed
+Envoyer un message enrichi sous l'identité de DraftBot ou d'un profil personnalisé.
+/maths
+Résoudre une expression mathématique.
+/qrcode
+Générer un QR Code.
+/reagir
+Ajouter une réaction à un message sous l'identité de DraftBot.
+/role tous
+Ajouter ou retirer un rôle à tous les membres du serveur.
+/role annuler
+Annuler une opération d'ajout/retrait de rôle en masse sur le serveur.
+/role status
+Voir le statut de la fonctionnalité sur le serveur.
+/role pour
+Ajouter ou retirer un rôle aux membres d'un autre rôle.
+/envoyer
+Envoyer un message sous l'identité de DraftBot ou d'un profil personnalisé.
+/timestamp
+Afficher une date au format Discord.

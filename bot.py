@@ -161,33 +161,34 @@ class SteamNewsBot(commands.Bot):
                 # Check rate limiting
                 if not self.check_rate_limit(interaction.user.id):
                     cooldown_time = self.get_cooldown_remaining(interaction.user.id)
-                    await interaction.followup.send(f"⏰ Please wait {cooldown_time} seconds before using this command again.")
+                    await interaction.followup.send(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.")
                     return
                 
-                # Search for the game
-                await interaction.followup.send(f"🔍 Searching for Steam news about '{game_name}'...")
+                # All processing in background with single loading message
+                await interaction.followup.send(f"🔍 Recherche et traduction des actualités Steam pour '{game_name}'...")
                 
+                # Search for the game
                 game_data = await self.steam_api.search_game(game_name)
                 
                 if not game_data:
-                    await interaction.followup.send(f"❌ Could not find a game named '{game_name}' on Steam.")
+                    await interaction.edit_original_response(content=f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
                     return
                 
                 app_id = game_data['appid']
                 game_title = game_data['name']
                 
                 # Fetch news
-                await interaction.followup.send(f"📰 Fetching latest news for '{game_title}'...")
                 news_items = await self.steam_api.get_game_news(app_id)
                 
                 if not news_items:
-                    await interaction.followup.send(f"❌ No recent news found for '{game_title}'.")
+                    await interaction.edit_original_response(content=f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
                     return
                 
-                # Process and translate news
+                # Edit the loading message to show completion
+                await interaction.edit_original_response(content=f"✅ Actualités trouvées pour **{game_title}** :")
+                
+                # Process and translate news (send embeds only)
                 for i, news in enumerate(news_items[:Config.MAX_NEWS_ITEMS]):
-                    await interaction.followup.send(f"🔄 Translating news article {i+1}/{min(len(news_items), Config.MAX_NEWS_ITEMS)}...")
-                    
                     # Translate content
                     translated_title = await self.translator.translate_text(news['title'])
                     translated_content = await self.translator.translate_text(news['contents'][:500])  # Limit content length
@@ -201,10 +202,10 @@ class SteamNewsBot(commands.Bot):
                     )
                     
                     embed.set_author(name=f"Steam News - {game_title}")
-                    embed.add_field(name="🌐 Original Title", value=news['title'][:100] + ("..." if len(news['title']) > 100 else ""), inline=False)
-                    embed.add_field(name="✍️ Author", value=news.get('author', 'Steam'), inline=True)
-                    embed.add_field(name="🔗 Read More", value=f"[View on Steam]({news['url']})", inline=True)
-                    embed.set_footer(text="Translated from English to French")
+                    embed.add_field(name="🌐 Titre Original", value=news['title'][:100] + ("..." if len(news['title']) > 100 else ""), inline=False)
+                    embed.add_field(name="✍️ Auteur", value=news.get('author', 'Steam'), inline=True)
+                    embed.add_field(name="🔗 Lire Plus", value=f"[Voir sur Steam]({news['url']})", inline=True)
+                    embed.set_footer(text="Traduit de l'anglais vers le français")
                     
                     await interaction.followup.send(embed=embed)
                     
@@ -212,47 +213,46 @@ class SteamNewsBot(commands.Bot):
                     if i < len(news_items[:Config.MAX_NEWS_ITEMS]) - 1:
                         await asyncio.sleep(1)
                 
-                await interaction.followup.send("✅ News translation complete!")
-                
             except Exception as e:
                 logger.error(f"Error in steam_news slash command: {e}")
+                error_msg = f"❌ Une erreur s'est produite lors de la récupération des actualités : {str(e)}"
                 if not interaction.response.is_done():
-                    await interaction.response.send_message(f"❌ An error occurred while fetching news: {str(e)}")
+                    await interaction.response.send_message(error_msg)
                 else:
-                    await interaction.followup.send(f"❌ An error occurred while fetching news: {str(e)}")
+                    await interaction.followup.send(error_msg)
         
-        @self.tree.command(name='help-steam', description='Get help for Steam news commands')
+        @self.tree.command(name='help-steam', description='Aide pour les commandes Steam news')
         async def help_steam_slash(interaction: discord.Interaction):
             """Slash command version of help"""
             embed = discord.Embed(
-                title="🎮 Steam News Bot Help",
-                description="Get the latest Steam game news translated to French!",
+                title="🎮 Bot Actualités Steam - Aide",
+                description="Obtenez les dernières actualités des jeux Steam traduites en français !",
                 color=0x00ff00
             )
             
             embed.add_field(
-                name="📰 /steam-news [game_name]",
-                value="Fetches recent news for a Steam game and translates it to French.\n"
-                      "Example: `/steam-news Counter-Strike 2`",
+                name="📰 /steam-news [nom_du_jeu]",
+                value="Récupère les actualités récentes d'un jeu Steam et les traduit en français.\n"
+                      "Exemple : `/steam-news OUTBRK`",
                 inline=False
             )
             
             embed.add_field(
-                name="⏰ Rate Limiting",
-                value=f"Commands can be used once every {Config.RATE_LIMIT_SECONDS} seconds per user.",
+                name="⏰ Limitation de Débit",
+                value=f"Les commandes peuvent être utilisées une fois toutes les {Config.RATE_LIMIT_SECONDS} secondes par utilisateur.",
                 inline=False
             )
             
             embed.add_field(
-                name="🔧 Features",
-                value="• Automatic game search\n"
-                      "• French translation\n"
-                      "• Rich embeds with links\n"
-                      "• Error handling",
+                name="🔧 Fonctionnalités",
+                value="• Recherche automatique de jeux\n"
+                      "• Traduction française\n"
+                      "• Messages riches avec liens\n"
+                      "• Gestion d'erreurs",
                 inline=False
             )
             
-            embed.set_footer(text="Steam News Bot • Made with discord.py")
+            embed.set_footer(text="Bot Actualités Steam • Créé avec discord.py")
             
             await interaction.response.send_message(embed=embed)
     
