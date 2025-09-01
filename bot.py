@@ -155,14 +155,14 @@ class SteamNewsBot(commands.Bot):
         async def steam_news_slash(interaction: discord.Interaction, game_name: str):
             """Slash command version of steam news"""
             try:
-                # Defer the response since this will take time
-                await interaction.response.defer()
-                
-                # Check rate limiting
+                # Check rate limiting FIRST before deferring
                 if not self.check_rate_limit(interaction.user.id):
                     cooldown_time = self.get_cooldown_remaining(interaction.user.id)
-                    await interaction.followup.send(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.", ephemeral=True)
+                    await interaction.response.send_message(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.", ephemeral=True)
                     return
+                
+                # Defer the response since this will take time - do this AFTER rate limit check
+                await interaction.response.defer()
                 
                 # Search for the game silently
                 game_data = await self.steam_api.search_game(game_name)
@@ -251,11 +251,18 @@ class SteamNewsBot(commands.Bot):
                 
             except Exception as e:
                 logger.error(f"Error in steam_news slash command: {e}")
-                error_msg = f"❌ Une erreur s'est produite lors de la récupération des actualités : {str(e)}"
-                if not interaction.response.is_done():
-                    await interaction.response.send_message(error_msg)
-                else:
-                    await interaction.followup.send(error_msg)
+                error_msg = f"❌ Une erreur s'est produite lors de la récupération des actualités."
+                
+                try:
+                    if not interaction.response.is_done():
+                        await interaction.response.send_message(error_msg, ephemeral=True)
+                    else:
+                        await interaction.followup.send(error_msg, ephemeral=True)
+                except discord.NotFound:
+                    # Interaction already expired, can't respond
+                    logger.warning("Interaction expired, cannot send error message")
+                except Exception as followup_error:
+                    logger.error(f"Could not send error message: {followup_error}")
         
         @self.tree.command(name='help-steam', description='Aide pour les commandes Steam news')
         async def help_steam_slash(interaction: discord.Interaction):
