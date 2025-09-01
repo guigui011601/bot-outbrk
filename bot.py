@@ -449,7 +449,7 @@ class SteamNewsBot(commands.Bot):
                     
                     # Use game title as author with Steam icon
                     embed.set_author(
-                        name="🎮 OUTBRK - Nouvelle actualité !",
+                        name="🎮 OUTBRK",
                         icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
                     )
                     
@@ -485,13 +485,13 @@ class SteamNewsBot(commands.Bot):
                     
                     # Footer
                     embed.set_footer(
-                        text="🇫🇷 Traduit automatiquement • Actualités Steam • 🤖 Publié automatiquement",
+                        text="🇫🇷 Traduit automatiquement • Actualités Steam",
                         icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
                     )
                     
                     try:
-                        # Send the news
-                        await channel.send("🚨 **Nouvelle actualité OUTBRK !** 🚨", embed=embed)
+                        # Send only the embed, no additional message
+                        await channel.send(embed=embed)
                         
                         # Mark as published
                         self.published_news.add(news_id)

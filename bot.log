@@ -1,0 +1,484 @@
+2025-09-01 13:35:00,964 - __main__ - ERROR - DISCORD_BOT_TOKEN not found in environment variables
+2025-09-01 13:35:00,964 - __main__ - INFO - Bot shutdown complete
+2025-09-01 13:35:09,388 - __main__ - ERROR - DISCORD_BOT_TOKEN not found in environment variables
+2025-09-01 13:35:09,399 - __main__ - INFO - Bot shutdown complete
+2025-09-01 13:36:32,405 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 13:36:32,418 - discord.client - INFO - logging in using static token
+2025-09-01 13:36:32,833 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 13:36:32,852 - discord.client - INFO - logging in using static token
+2025-09-01 13:36:33,132 - __main__ - ERROR - Unexpected error: Shard ID None is requesting privileged intents that have not been explicitly enabled in the developer portal. It is recommended to go to https://discord.com/developers/applications/ and explicitly enable the privileged intents within your application's page. If this is not possible, then consider disabling the privileged intents instead.
+2025-09-01 13:36:33,132 - __main__ - INFO - Bot shutdown complete
+2025-09-01 13:36:33,166 - asyncio - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x7f79a7114de0>, 8750.845324818)])']
+connector: <aiohttp.connector.TCPConnector object at 0x7f79a80671d0>
+2025-09-01 13:36:34,234 - __main__ - ERROR - Unexpected error: Shard ID None is requesting privileged intents that have not been explicitly enabled in the developer portal. It is recommended to go to https://discord.com/developers/applications/ and explicitly enable the privileged intents within your application's page. If this is not possible, then consider disabling the privileged intents instead.
+2025-09-01 13:36:34,235 - __main__ - INFO - Bot shutdown complete
+2025-09-01 13:36:34,271 - asyncio - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x7f1023500e50>, 8751.455773712)])']
+connector: <aiohttp.connector.TCPConnector object at 0x7f10233275d0>
+2025-09-01 13:37:29,660 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 13:37:29,671 - discord.client - INFO - logging in using static token
+2025-09-01 13:37:29,671 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 13:37:30,464 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: e824950592d24c53adc42a011812b326).
+2025-09-01 13:37:32,466 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 13:37:32,730 - bot - INFO - Synced 2 command(s)
+2025-09-01 13:56:26,425 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 13:56:26,439 - discord.client - INFO - logging in using static token
+2025-09-01 13:56:26,439 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 13:56:27,617 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 1f52da63dcc1c73d8e9bc89fcb6cab2d).
+2025-09-01 13:56:29,625 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 13:56:29,902 - bot - INFO - Synced 2 command(s)
+2025-09-01 13:59:03,812 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 13:59:03,831 - discord.client - INFO - logging in using static token
+2025-09-01 13:59:03,835 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 13:59:04,585 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: ba6d9886d253e3c384b53d96b2eb7e30).
+2025-09-01 13:59:06,603 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 13:59:06,887 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:01:27,009 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:01:27,058 - discord.client - INFO - logging in using static token
+2025-09-01 14:01:27,062 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:01:27,909 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: be1bf2a02c1ef24ba3a0167c33d60220).
+2025-09-01 14:01:29,915 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:01:30,332 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:03:54,903 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:03:54,927 - discord.client - INFO - logging in using static token
+2025-09-01 14:03:54,930 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:03:55,341 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:03:55,359 - discord.client - INFO - logging in using static token
+2025-09-01 14:03:55,359 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:03:55,642 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 36fd83ce54b9c903d9494fd255807a70).
+2025-09-01 14:03:56,008 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 68dcce21503f64dea3827fe19a6f0fd6).
+2025-09-01 14:03:57,647 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:03:58,001 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:03:58,013 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:04:19,615 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:04:19,739 - discord.app_commands.tree - ERROR - Ignoring exception in command 'steam-news'
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 159, in steam_news_slash
+    await interaction.response.defer()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 858, in defer
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 859, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/bot.py", line 253, in steam_news_slash
+    await interaction.response.send_message(error_msg)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 1051, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1297, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 884, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 877, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'steam-news' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-09-01 14:04:52,483 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:04:52,497 - discord.client - INFO - logging in using static token
+2025-09-01 14:04:52,497 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:04:53,246 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: fb89ce0d8661fae4e6da4ecbebd8afbc).
+2025-09-01 14:04:55,267 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:04:57,989 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:05:14,915 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:05:15,023 - discord.app_commands.tree - ERROR - Ignoring exception in command 'steam-news'
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 159, in steam_news_slash
+    await interaction.response.defer()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 858, in defer
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 859, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/bot.py", line 253, in steam_news_slash
+    await interaction.response.send_message(error_msg)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 1051, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1297, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 884, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 877, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'steam-news' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-09-01 14:05:27,879 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:07:07,011 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:07:07,028 - discord.client - INFO - logging in using static token
+2025-09-01 14:07:07,029 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:07:07,072 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:07:07,085 - discord.client - INFO - logging in using static token
+2025-09-01 14:07:07,085 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:07:07,920 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 0f66bab45d9301e6c37e0fa8b503daa2).
+2025-09-01 14:07:07,934 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: ca737cee3d96cf6a355de24cf51f62ba).
+2025-09-01 14:07:09,925 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:07:09,939 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:07:10,211 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:08:06,044 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:08:06,165 - discord.app_commands.tree - ERROR - Ignoring exception in command 'steam-news'
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 159, in steam_news_slash
+    await interaction.response.defer()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 858, in defer
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 859, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/bot.py", line 256, in steam_news_slash
+    await interaction.response.send_message(error_msg)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 1051, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1297, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 884, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 877, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'steam-news' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-09-01 14:08:10,240 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:09:38,058 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:09:38,077 - discord.client - INFO - logging in using static token
+2025-09-01 14:09:38,080 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:09:38,367 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:09:38,387 - discord.client - INFO - logging in using static token
+2025-09-01 14:09:38,388 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:09:38,891 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 2176187a308a2293ee661c463c9806da).
+2025-09-01 14:09:39,449 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 4c1e34b9ab644312e5f4abe90d6fc036).
+2025-09-01 14:09:40,897 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:09:41,282 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:09:41,454 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:09:55,626 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:09:55,741 - discord.app_commands.tree - ERROR - Ignoring exception in command 'steam-news'
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 159, in steam_news_slash
+    await interaction.response.defer()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 858, in defer
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 859, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/bot.py", line 256, in steam_news_slash
+    await interaction.response.send_message(error_msg)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 1051, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1297, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 884, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 877, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'steam-news' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-09-01 14:10:41,388 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:12:02,363 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:12:02,372 - discord.client - INFO - logging in using static token
+2025-09-01 14:12:02,372 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:12:03,087 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: ebb4a1ec36d8bcd8804b93eb3d42e8e0).
+2025-09-01 14:12:05,097 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:12:05,392 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:12:19,938 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:12:20,053 - discord.app_commands.tree - ERROR - Ignoring exception in command 'steam-news'
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 159, in steam_news_slash
+    if not self.check_rate_limit(interaction.user.id):
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 858, in defer
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 859, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/bot.py", line 256, in steam_news_slash
+    try:
+        ^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 1051, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1297, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 884, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 877, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'steam-news' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-09-01 14:13:36,721 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:13:36,729 - discord.client - INFO - logging in using static token
+2025-09-01 14:13:36,729 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:13:37,382 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: caa8d5f0536ca286cdc58d648ea4cebc).
+2025-09-01 14:13:39,387 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:13:39,654 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:14:05,919 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:14:06,024 - bot - ERROR - Could not send error message: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-09-01 14:14:55,026 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:14:55,035 - discord.client - INFO - logging in using static token
+2025-09-01 14:14:55,036 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:14:56,006 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: f014de66fc1c0db152552448e4e40840).
+2025-09-01 14:14:58,011 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:14:58,432 - bot - INFO - Synced 2 command(s)
+2025-09-01 14:15:28,720 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:18:22,859 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:18:22,866 - discord.client - INFO - logging in using static token
+2025-09-01 14:18:22,866 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:18:23,542 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 002068206c860912be2ae6b0932fa33b).
+2025-09-01 14:18:25,547 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:18:25,942 - bot - INFO - Synced 1 command(s)
+2025-09-01 14:18:59,256 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:19:59,978 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:19:59,986 - discord.client - INFO - logging in using static token
+2025-09-01 14:19:59,986 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:20:00,645 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 00894731437d8393f31a662e5a29d1dd).
+2025-09-01 14:20:02,658 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:20:02,988 - bot - INFO - Synced 1 command(s)
+2025-09-01 14:20:06,195 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:20:06,317 - discord.app_commands.tree - ERROR - Ignoring exception in command 'steam-news'
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 159, in steam_news_slash
+    if not self.check_rate_limit(interaction.user.id):
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 858, in defer
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 859, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/bot.py", line 256, in steam_news_slash
+    embed.add_field(name="👤 Auteur", value=info_parts[0].replace("👤 ", ""), inline=True)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/interactions.py", line 1051, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 1297, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 884, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/commands.py", line 877, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'steam-news' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+2025-09-01 14:20:09,703 - bot - ERROR - Error in simple news processing: 403 Forbidden (error code: 50001): Missing Access
+2025-09-01 14:20:25,234 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:20:25,247 - discord.client - INFO - logging in using static token
+2025-09-01 14:20:25,249 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:20:25,695 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:20:25,704 - discord.client - INFO - logging in using static token
+2025-09-01 14:20:25,704 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:20:26,065 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: cddae18d59704ef7a9f1b1324c61f09f).
+2025-09-01 14:20:26,609 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 2938017c040b7eb8a2e9f81f2c523021).
+2025-09-01 14:20:28,085 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:20:28,613 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:20:28,786 - discord.http - WARNING - We are being rate limited. PUT https://discord.com/api/v10/applications/1412065044019281930/commands responded with 429. Retrying in 4.04 seconds.
+2025-09-01 14:21:02,953 - bot - INFO - Synced 1 command(s)
+2025-09-01 14:21:33,026 - bot - INFO - Synced 1 command(s)
+2025-09-01 14:21:38,777 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:21:38,793 - discord.client - INFO - logging in using static token
+2025-09-01 14:21:39,643 - __main__ - ERROR - Unexpected error: Shard ID None is requesting privileged intents that have not been explicitly enabled in the developer portal. It is recommended to go to https://discord.com/developers/applications/ and explicitly enable the privileged intents within your application's page. If this is not possible, then consider disabling the privileged intents instead.
+2025-09-01 14:21:39,643 - __main__ - INFO - Bot shutdown complete
+2025-09-01 14:21:39,693 - asyncio - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x7f8b694891d0>, 11457.39454829)])']
+connector: <aiohttp.connector.TCPConnector object at 0x7f8b692c0210>
+2025-09-01 14:22:02,423 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:22:02,445 - discord.client - INFO - logging in using static token
+2025-09-01 14:22:02,450 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:22:03,172 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: ce45ca919e2bedc7e606a3b8e91d27af).
+2025-09-01 14:22:05,179 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:22:05,396 - bot - INFO - Synced 1 command(s)
+2025-09-01 14:22:34,693 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:22:38,296 - bot - ERROR - Error in simple news processing: 403 Forbidden (error code: 50001): Missing Access
+2025-09-01 14:23:44,780 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:23:44,810 - discord.client - INFO - logging in using static token
+2025-09-01 14:23:44,810 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:23:45,848 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 8cee4ffac6aedf46bd2e8a8c6745b16b).
+2025-09-01 14:23:47,855 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:23:48,078 - bot - INFO - Synced 1 command(s)
+2025-09-01 14:25:18,555 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:25:27,025 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-35' coro=<SteamNewsBot._process_news_simple() done, defined at /home/runner/workspace/bot.py:186> exception=CommandAlreadyRegistered("Command 'help-steam' already registered.")>
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 284, in _process_news_simple
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 931, in decorator
+    self.add_command(command, guild=guild, guilds=guilds)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 407, in add_command
+    raise CommandAlreadyRegistered(name, None)
+discord.app_commands.errors.CommandAlreadyRegistered: Command 'help-steam' already registered.
+2025-09-01 14:30:01,108 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:30:01,123 - discord.client - INFO - logging in using static token
+2025-09-01 14:30:01,126 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:30:02,013 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: c7f4ef7e1fafc2513174df9e222b41e4).
+2025-09-01 14:30:04,038 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:30:04,420 - bot - INFO - Synced 3 command(s)
+2025-09-01 14:30:04,421 - bot - INFO - Started automatic news checking for OUTBRK
+2025-09-01 14:30:04,422 - bot - WARNING - Auto channel not set, skipping auto news check
+2025-09-01 14:47:16,213 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:47:25,393 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-81' coro=<SteamNewsBot._process_news_simple() done, defined at /home/runner/workspace/bot.py:186> exception=CommandAlreadyRegistered("Command 'help-steam' already registered.")>
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 284, in _process_news_simple
+    try:
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 931, in decorator
+    self.add_command(command, guild=guild, guilds=guilds)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 407, in add_command
+    raise CommandAlreadyRegistered(name, None)
+discord.app_commands.errors.CommandAlreadyRegistered: Command 'help-steam' already registered.
+2025-09-01 14:48:38,212 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:48:42,723 - bot - INFO - Successfully sent news via followup: OUTBRK: Perspectives de dévelo...
+2025-09-01 14:48:45,179 - bot - INFO - Successfully sent news via followup: HOTFIX 0.3.1.1338 - correctifs...
+2025-09-01 14:48:47,534 - bot - INFO - Successfully sent news via followup: Hotfix 0.3.1.1324 - Contrats e...
+2025-09-01 14:49:19,642 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:49:28,035 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-102' coro=<SteamNewsBot._process_news_simple() done, defined at /home/runner/workspace/bot.py:186> exception=CommandAlreadyRegistered("Command 'help-steam' already registered.")>
+Traceback (most recent call last):
+  File "/home/runner/workspace/bot.py", line 284, in _process_news_simple
+    try:
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 931, in decorator
+    self.add_command(command, guild=guild, guilds=guilds)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/discord/app_commands/tree.py", line 407, in add_command
+    raise CommandAlreadyRegistered(name, None)
+discord.app_commands.errors.CommandAlreadyRegistered: Command 'help-steam' already registered.
+2025-09-01 14:49:40,177 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:49:40,188 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:49:40,197 - discord.client - INFO - logging in using static token
+2025-09-01 14:49:40,199 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:49:40,203 - discord.client - INFO - logging in using static token
+2025-09-01 14:49:40,204 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:49:40,983 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: c07ae57a1e48abe66e6b19c05de734a2).
+2025-09-01 14:49:41,048 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 6d917c2e0ab644c52eee5b308606ddcc).
+2025-09-01 14:49:43,002 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:49:43,060 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:49:43,270 - bot - INFO - Synced 3 command(s)
+2025-09-01 14:49:43,270 - bot - INFO - Started automatic news checking for OUTBRK
+2025-09-01 14:49:43,271 - bot - WARNING - Auto channel not set, skipping auto news check
+2025-09-01 14:49:59,146 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:50:03,399 - bot - INFO - Successfully sent news via followup: OUTBRK: Perspectives de dévelo...
+2025-09-01 14:50:05,684 - bot - INFO - Successfully sent news via followup: HOTFIX 0.3.1.1338 - correctifs...
+2025-09-01 14:50:08,084 - bot - INFO - Successfully sent news via followup: Hotfix 0.3.1.1324 - Contrats e...
+2025-09-01 14:50:43,243 - bot - INFO - Synced 3 command(s)
+2025-09-01 14:50:43,244 - bot - INFO - Started automatic news checking for OUTBRK
+2025-09-01 14:50:43,244 - bot - WARNING - Auto channel not set, skipping auto news check
+2025-09-01 14:50:54,022 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:50:58,688 - bot - INFO - Successfully sent news via followup: OUTBRK: Perspectives de dévelo...
+2025-09-01 14:50:59,192 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:51:01,022 - bot - INFO - Successfully sent news via followup: HOTFIX 0.3.1.1338 - correctifs...
+2025-09-01 14:51:03,542 - bot - INFO - Successfully sent news via followup: Hotfix 0.3.1.1324 - Contrats e...
+2025-09-01 14:51:04,538 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:51:12,889 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:51:26,629 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:51:30,832 - bot - INFO - Successfully sent news via followup: OUTBRK: Perspectives de dévelo...
+2025-09-01 14:51:33,150 - bot - INFO - Successfully sent news via followup: HOTFIX 0.3.1.1338 - correctifs...
+2025-09-01 14:51:35,789 - bot - INFO - Successfully sent news via followup: Hotfix 0.3.1.1324 - Contrats e...
+2025-09-01 14:52:05,826 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:52:10,185 - bot - INFO - Successfully sent news via followup: OUTBRK: Perspectives de dévelo...
+2025-09-01 14:52:12,495 - bot - INFO - Successfully sent news via followup: HOTFIX 0.3.1.1338 - correctifs...
+2025-09-01 14:52:15,025 - bot - INFO - Successfully sent news via followup: Hotfix 0.3.1.1324 - Contrats e...
+2025-09-01 14:52:26,312 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:52:26,377 - discord.client - INFO - logging in using static token
+2025-09-01 14:52:26,378 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:52:26,379 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2025-09-01 14:52:26,390 - discord.client - INFO - logging in using static token
+2025-09-01 14:52:26,390 - discord.ext.commands.bot - WARNING - Privileged message content intent is missing, commands may not work as expected.
+2025-09-01 14:52:27,383 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: accb889dd17f5afdc71fd923ac0a0e3d).
+2025-09-01 14:52:27,428 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 68a90e05c27de44cb3493022dc5b9d78).
+2025-09-01 14:52:29,389 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:52:29,437 - bot - INFO - Bot logged in as OUTBRK#9624 (ID: 1412065044019281930)
+2025-09-01 14:52:29,780 - bot - INFO - Synced 3 command(s)
+2025-09-01 14:52:29,781 - bot - INFO - Started automatic news checking for OUTBRK
+2025-09-01 14:52:29,781 - bot - WARNING - Auto channel not set, skipping auto news check
+2025-09-01 14:52:29,859 - bot - ERROR - Error in steam_news slash command: 404 Not Found (error code: 10062): Unknown interaction
+2025-09-01 14:52:34,084 - bot - INFO - Successfully sent news via followup: OUTBRK: Perspectives de dévelo...
+2025-09-01 14:52:36,501 - bot - INFO - Successfully sent news via followup: HOTFIX 0.3.1.1338 - correctifs...
+2025-09-01 14:52:38,947 - bot - INFO - Successfully sent news via followup: Hotfix 0.3.1.1324 - Contrats e...
+2025-09-01 14:53:29,757 - bot - INFO - Synced 3 command(s)
+2025-09-01 14:53:29,758 - bot - INFO - Started automatic news checking for OUTBRK
+2025-09-01 14:53:29,758 - bot - WARNING - Auto channel not set, skipping auto news check
