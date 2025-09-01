@@ -192,7 +192,10 @@ class SteamNewsBot(commands.Bot):
             game_data = await self.steam_api.search_game(game_name)
             
             if not game_data:
-                await channel.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
+                try:
+                    await channel.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
+                except Exception as e:
+                    logger.error(f"Cannot send to channel: {e}")
                 return
             
             app_id = game_data['appid']
@@ -202,7 +205,10 @@ class SteamNewsBot(commands.Bot):
             news_items = await self.steam_api.get_game_news(app_id)
             
             if not news_items:
-                await channel.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
+                try:
+                    await channel.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
+                except Exception as e:
+                    logger.error(f"Cannot send to channel: {e}")
                 return
                 
             # Get game header image once for fallback
@@ -268,7 +274,16 @@ class SteamNewsBot(commands.Bot):
                 )
                 
                 # Send to channel directly
-                await channel.send(embed=embed)
+                try:
+                    await channel.send(embed=embed)
+                    logger.info(f"Successfully sent news: {translated_title[:30]}...")
+                except Exception as e:
+                    logger.error(f"Failed to send embed to channel: {e}")
+                    # Try sending as simple text instead
+                    try:
+                        await channel.send(f"**{translated_title}**\n\n{translated_content[:500]}...\n\n🔗 {news['url']}")
+                    except Exception as e2:
+                        logger.error(f"Failed to send text message too: {e2}")
                 
                 # Small delay between messages to avoid rate limits
                 if i < len(news_items[:Config.MAX_NEWS_ITEMS]) - 1:
