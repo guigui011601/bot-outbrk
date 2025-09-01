@@ -164,14 +164,11 @@ class SteamNewsBot(commands.Bot):
                     await interaction.followup.send(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.")
                     return
                 
-                # All processing in background with single loading message
-                await interaction.followup.send(f"🔍 Recherche et traduction des actualités Steam pour '{game_name}'...")
-                
-                # Search for the game
+                # Search for the game silently
                 game_data = await self.steam_api.search_game(game_name)
                 
                 if not game_data:
-                    await interaction.edit_original_response(content=f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
+                    await interaction.followup.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
                     return
                 
                 app_id = game_data['appid']
@@ -181,11 +178,8 @@ class SteamNewsBot(commands.Bot):
                 news_items = await self.steam_api.get_game_news(app_id)
                 
                 if not news_items:
-                    await interaction.edit_original_response(content=f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
+                    await interaction.followup.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
                     return
-                
-                # Edit the loading message to show completion
-                await interaction.edit_original_response(content=f"✅ Actualités trouvées pour **{game_title}** :")
                 
                 # Process and translate news (send embeds only)
                 for i, news in enumerate(news_items[:Config.MAX_NEWS_ITEMS]):
@@ -193,19 +187,39 @@ class SteamNewsBot(commands.Bot):
                     translated_title = await self.translator.translate_text(news['title'])
                     translated_content = await self.translator.translate_text(news['contents'][:500])  # Limit content length
                     
-                    # Create embed
+                    # Create improved embed with better design
                     embed = discord.Embed(
-                        title=f"📰 {translated_title}",
+                        title=translated_title,
                         description=translated_content + ("..." if len(news['contents']) > 500 else ""),
-                        color=0x1e3a8a,
+                        color=0x00b4d8,  # Steam blue color
                         timestamp=datetime.fromtimestamp(news['date'])
                     )
                     
-                    embed.set_author(name=f"Steam News - {game_title}")
-                    embed.add_field(name="🌐 Titre Original", value=news['title'][:100] + ("..." if len(news['title']) > 100 else ""), inline=False)
-                    embed.add_field(name="✍️ Auteur", value=news.get('author', 'Steam'), inline=True)
-                    embed.add_field(name="🔗 Lire Plus", value=f"[Voir sur Steam]({news['url']})", inline=True)
-                    embed.set_footer(text="Traduit de l'anglais vers le français")
+                    # Use game title as author with Steam icon
+                    embed.set_author(
+                        name=game_title,
+                        icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                    )
+                    
+                    # Add fields with better formatting
+                    if news['title'] != translated_title:
+                        embed.add_field(
+                            name="🌐 Titre Original", 
+                            value=f"*{news['title'][:150]}{'...' if len(news['title']) > 150 else ''}*", 
+                            inline=False
+                        )
+                    
+                    # Author and link in same line
+                    author_text = news.get('author', 'Steam')
+                    embed.add_field(name="👤 Auteur", value=author_text, inline=True)
+                    embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                    embed.add_field(name="📅 Date", value=f"<t:{news['date']}:R>", inline=True)
+                    
+                    # Footer with translation info
+                    embed.set_footer(
+                        text="🇫🇷 Traduit automatiquement de l'anglais",
+                        icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                    )
                     
                     await interaction.followup.send(embed=embed)
                     
