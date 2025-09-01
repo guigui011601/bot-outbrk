@@ -179,13 +179,7 @@ class SteamNewsBot(commands.Bot):
                 logger.error(f"Error in steam_news slash command: {e}")
                 error_msg = f"❌ Une erreur s'est produite lors de la récupération des actualités."
                 
-                try:
-                    await interaction.edit_original_response(content=error_msg)
-                except discord.NotFound:
-                    # Interaction already expired, can't respond
-                    logger.warning("Interaction expired, cannot send error message")
-                except Exception as followup_error:
-                    logger.error(f"Could not send error message: {followup_error}")
+                await self._safe_edit_interaction(interaction, error_msg)
     
     async def _process_and_post_news(self, interaction: discord.Interaction, game_name: str):
         """Process news and post directly to channel (not via interaction)"""
@@ -196,24 +190,24 @@ class SteamNewsBot(commands.Bot):
             game_data = await self.steam_api.search_game(game_name)
             
             if not game_data:
-                await interaction.edit_original_response(content=f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
+                await self._safe_edit_interaction(interaction, f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
                 return
             
             app_id = game_data['appid']
             game_title = game_data['name']
             
             # Update ephemeral message
-            await interaction.edit_original_response(content=f"🔍 Jeu trouvé: **{game_title}**\n📰 Récupération des actualités...")
+            await self._safe_edit_interaction(interaction, f"🔍 Jeu trouvé: **{game_title}**\n📰 Récupération des actualités...")
             
             # Fetch news
             news_items = await self.steam_api.get_game_news(app_id)
             
             if not news_items:
-                await interaction.edit_original_response(content=f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
+                await self._safe_edit_interaction(interaction, f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
                 return
                 
             # Update ephemeral message
-            await interaction.edit_original_response(content=f"✅ **{len(news_items[:Config.MAX_NEWS_ITEMS])} actualité(s) trouvée(s) pour {game_title}**\n🔄 Traduction et publication en cours...")
+            await self._safe_edit_interaction(interaction, f"✅ **{len(news_items[:Config.MAX_NEWS_ITEMS])} actualité(s) trouvée(s) pour {game_title}**\n🔄 Traduction et publication en cours...")
             
             # Get game header image once for fallback
             game_header_image = await self.steam_api.get_game_header_image(app_id)
@@ -297,14 +291,26 @@ class SteamNewsBot(commands.Bot):
                     await asyncio.sleep(1)
             
             # Update final ephemeral message
-            await interaction.edit_original_response(content=f"✅ **Publication terminée !**\n📰 {len(news_items[:Config.MAX_NEWS_ITEMS])} actualité(s) de **{game_title}** publiée(s) dans le canal.")
+            await self._safe_edit_interaction(interaction, f"✅ **Publication terminée !**\n📰 {len(news_items[:Config.MAX_NEWS_ITEMS])} actualité(s) de **{game_title}** publiée(s) dans le canal.")
                     
         except Exception as e:
             logger.error(f"Error in news processing: {e}")
-            try:
-                await interaction.edit_original_response(content="❌ Une erreur s'est produite lors de la récupération des actualités.")
-            except:
-                pass
+            await self._safe_edit_interaction(interaction, "❌ Une erreur s'est produite lors de la récupération des actualités.")
+
+    async def _safe_edit_interaction(self, interaction: discord.Interaction, content: str):
+        """Safely edit interaction response, handling expiration errors"""
+        try:
+            await interaction.edit_original_response(content=content)
+        except discord.NotFound:
+            # Interaction expired, log but don't crash
+            logger.warning("Interaction expired, cannot update status message")
+        except discord.HTTPException as e:
+            if e.code == 10062:  # Unknown interaction
+                logger.warning("Unknown interaction error, probably expired")
+            else:
+                logger.error(f"HTTP error updating interaction: {e}")
+        except Exception as e:
+            logger.error(f"Error updating interaction: {e}")
 
     async def _process_news_via_interaction(self, interaction: discord.Interaction, game_name: str):
         """Process news via interaction followups to bypass channel permission issues"""
@@ -547,7 +553,12 @@ class SteamNewsBot(commands.Bot):
             
             # Check each news item
             for news in news_items[:Config.MAX_NEWS_ITEMS]:
-                news_id = f"{news['gid']}"  # Unique identifier
+                # Create unique identifier using URL or title+date combination
+                if 'url' in news and news['url']:
+                    news_id = news['url']
+                else:
+                    # Fallback: create ID from title and date
+                    news_id = f"{news.get('title', 'no_title')}_{news.get('date', 0)}"
                 
                 if news_id not in self.published_news:
                     # This is a new news item!
