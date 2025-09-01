@@ -215,8 +215,11 @@ class SteamNewsBot(commands.Bot):
             # Get the channel where the command was used
             channel = interaction.channel
             
+            # Sort news by date (oldest first, newest last)
+            sorted_news = sorted(news_items[:Config.MAX_NEWS_ITEMS], key=lambda x: x.get('date', 0))
+            
             # Process and translate news (post directly to channel)
-            for i, news in enumerate(news_items[:Config.MAX_NEWS_ITEMS]):
+            for i, news in enumerate(sorted_news):
                 # Translate content
                 translated_title = await self.translator.translate_text(news['title'])
                 translated_content = await self.translator.translate_text(news['contents'][:600])
@@ -287,11 +290,11 @@ class SteamNewsBot(commands.Bot):
                         logger.error(f"Failed to send text to channel too: {e2}")
                 
                 # Small delay between messages to avoid rate limits
-                if i < len(news_items[:Config.MAX_NEWS_ITEMS]) - 1:
+                if i < len(sorted_news) - 1:
                     await asyncio.sleep(1)
             
             # Update final ephemeral message
-            await self._safe_edit_interaction(interaction, f"✅ **Publication terminée !**\n📰 {len(news_items[:Config.MAX_NEWS_ITEMS])} actualité(s) de **{game_title}** publiée(s) dans le canal.")
+            await self._safe_edit_interaction(interaction, f"✅ **Publication terminée !**\n📰 {len(sorted_news)} actualité(s) de **{game_title}** publiée(s) dans le canal.")
                     
         except Exception as e:
             logger.error(f"Error in news processing: {e}")
@@ -300,17 +303,24 @@ class SteamNewsBot(commands.Bot):
     async def _safe_edit_interaction(self, interaction: discord.Interaction, content: str):
         """Safely edit interaction response, handling expiration errors"""
         try:
-            await interaction.edit_original_response(content=content)
+            # Check if interaction is still valid before trying to edit
+            if interaction.response.is_done():
+                await interaction.edit_original_response(content=content)
+            else:
+                # If response not done yet, we can't edit - skip silently
+                logger.debug("Interaction response not done yet, skipping edit")
         except discord.NotFound:
             # Interaction expired, log but don't crash
-            logger.warning("Interaction expired, cannot update status message")
+            logger.debug("Interaction expired, cannot update status message")
         except discord.HTTPException as e:
             if e.code == 10062:  # Unknown interaction
-                logger.warning("Unknown interaction error, probably expired")
+                logger.debug("Unknown interaction error, probably expired")
+            elif e.code == 40060:  # Interaction has already been acknowledged
+                logger.debug("Interaction already acknowledged")
             else:
-                logger.error(f"HTTP error updating interaction: {e}")
+                logger.warning(f"HTTP error updating interaction: {e}")
         except Exception as e:
-            logger.error(f"Error updating interaction: {e}")
+            logger.warning(f"Unexpected error updating interaction: {e}")
 
     async def _process_news_via_interaction(self, interaction: discord.Interaction, game_name: str):
         """Process news via interaction followups to bypass channel permission issues"""
@@ -340,8 +350,11 @@ class SteamNewsBot(commands.Bot):
             # Send a confirmation message first
             await interaction.followup.send(f"📰 **Actualités {game_title}** :")
             
+            # Sort news by date (oldest first, newest last)
+            sorted_news = sorted(news_items[:Config.MAX_NEWS_ITEMS], key=lambda x: x.get('date', 0))
+            
             # Process and translate news (send embeds via followup)
-            for i, news in enumerate(news_items[:Config.MAX_NEWS_ITEMS]):
+            for i, news in enumerate(sorted_news):
                 # Translate content
                 translated_title = await self.translator.translate_text(news['title'])
                 translated_content = await self.translator.translate_text(news['contents'][:600])
@@ -412,7 +425,7 @@ class SteamNewsBot(commands.Bot):
                         logger.error(f"Failed to send text via followup too: {e2}")
                 
                 # Small delay between messages to avoid rate limits
-                if i < len(news_items[:Config.MAX_NEWS_ITEMS]) - 1:
+                if i < len(sorted_news) - 1:
                     await asyncio.sleep(1)
                     
         except Exception as e:
@@ -486,6 +499,20 @@ class SteamNewsBot(commands.Bot):
         if self.user:
             logger.info(f"Bot logged in as {self.user} (ID: {self.user.id})")
             
+            # Verify auto channel access
+            if self.auto_channel_id:
+                try:
+                    channel = self.get_channel(self.auto_channel_id)
+                    if channel:
+                        logger.info(f"Auto channel verified: #{channel.name} (ID: {channel.id})")
+                    else:
+                        # Try to fetch it
+                        channel = await self.fetch_channel(self.auto_channel_id)
+                        logger.info(f"Auto channel fetched: #{channel.name} (ID: {channel.id})")
+                except Exception as e:
+                    logger.error(f"Cannot access auto channel {self.auto_channel_id}: {e}")
+                    logger.warning("Auto posting may not work - check channel ID and bot permissions")
+            
             # Sync slash commands
             try:
                 synced = await self.tree.sync()
@@ -533,9 +560,25 @@ class SteamNewsBot(commands.Bot):
                 logger.warning("Auto channel not set, skipping auto news check")
                 return
             
-            channel = self.get_channel(self.auto_channel_id)
+            # Try to get channel with more robust error handling
+            channel = None
+            try:
+                channel = self.get_channel(self.auto_channel_id)
+                if not channel:
+                    # Try to fetch the channel if get_channel fails
+                    channel = await self.fetch_channel(self.auto_channel_id)
+            except discord.NotFound:
+                logger.error(f"Channel {self.auto_channel_id} not found - may have been deleted")
+                return
+            except discord.Forbidden:
+                logger.error(f"No permission to access channel {self.auto_channel_id}")
+                return
+            except Exception as e:
+                logger.error(f"Error accessing channel {self.auto_channel_id}: {e}")
+                return
+            
             if not channel:
-                logger.error(f"Could not find channel {self.auto_channel_id}")
+                logger.error(f"Could not access channel {self.auto_channel_id}")
                 return
             
             logger.info("Checking for new OUTBRK news...")
@@ -544,6 +587,7 @@ class SteamNewsBot(commands.Bot):
             news_items = await self.steam_api.get_game_news(1107320)
             
             if not news_items:
+                logger.info("No news items returned from Steam API")
                 return
             
             # Get game header image once for fallback
@@ -551,8 +595,11 @@ class SteamNewsBot(commands.Bot):
             
             new_news_found = False
             
+            # Sort news by date (oldest first, newest last) to check in chronological order
+            sorted_news = sorted(news_items[:Config.MAX_NEWS_ITEMS], key=lambda x: x.get('date', 0))
+            
             # Check each news item
-            for news in news_items[:Config.MAX_NEWS_ITEMS]:
+            for news in sorted_news:
                 # Create unique identifier using URL or title+date combination
                 if 'url' in news and news['url']:
                     news_id = news['url']
