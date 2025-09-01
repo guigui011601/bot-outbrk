@@ -181,43 +181,62 @@ class SteamNewsBot(commands.Bot):
                     await interaction.followup.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
                     return
                 
+                # Get game header image once for fallback
+                game_header_image = await self.steam_api.get_game_header_image(app_id)
+                
                 # Process and translate news (send embeds only)
                 for i, news in enumerate(news_items[:Config.MAX_NEWS_ITEMS]):
                     # Translate content
                     translated_title = await self.translator.translate_text(news['title'])
-                    translated_content = await self.translator.translate_text(news['contents'][:500])  # Limit content length
+                    translated_content = await self.translator.translate_text(news['contents'][:600])  # Slightly longer for better context
                     
-                    # Create improved embed with better design
+                    # Create improved embed with Steam-like design
                     embed = discord.Embed(
                         title=translated_title,
-                        description=translated_content + ("..." if len(news['contents']) > 500 else ""),
-                        color=0x00b4d8,  # Steam blue color
+                        description=translated_content + ("..." if len(news['contents']) > 600 else ""),
+                        color=0x1b2838,  # Steam dark blue/gray
                         timestamp=datetime.fromtimestamp(news['date'])
                     )
                     
                     # Use game title as author with Steam icon
                     embed.set_author(
-                        name=game_title,
+                        name=f"🎮 {game_title}",
                         icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
                     )
                     
-                    # Add fields with better formatting
-                    if news['title'] != translated_title:
+                    # Add main image if available
+                    if 'image' in news and news['image']:
+                        embed.set_image(url=news['image'])
+                    elif game_header_image:
+                        # Use game header as thumbnail if no news image
+                        embed.set_thumbnail(url=game_header_image)
+                    
+                    # Add fields with better formatting (more compact)
+                    if news['title'] != translated_title and len(news['title']) > 10:
                         embed.add_field(
                             name="🌐 Titre Original", 
-                            value=f"*{news['title'][:150]}{'...' if len(news['title']) > 150 else ''}*", 
+                            value=f"*{news['title'][:120]}{'...' if len(news['title']) > 120 else ''}*", 
                             inline=False
                         )
                     
-                    # Author and link in same line
-                    author_text = news.get('author', 'Steam')
-                    embed.add_field(name="👤 Auteur", value=author_text, inline=True)
-                    embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
-                    embed.add_field(name="📅 Date", value=f"<t:{news['date']}:R>", inline=True)
+                    # Create a more compact info line
+                    info_parts = []
+                    if news.get('author') and news['author'] != 'Steam':
+                        info_parts.append(f"👤 {news['author']}")
+                    info_parts.append(f"📅 <t:{news['date']}:R>")
                     
-                    # Footer with translation info
+                    if len(info_parts) == 2:
+                        embed.add_field(name="👤 Auteur", value=info_parts[0].replace("👤 ", ""), inline=True)
+                        embed.add_field(name="📅 Publié", value=info_parts[1].replace("📅 ", ""), inline=True)
+                        embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                    else:
+                        embed.add_field(name="📅 Publié", value=info_parts[-1].replace("📅 ", ""), inline=True)
+                        embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                        embed.add_field(name="\u200b", value="\u200b", inline=True)  # Empty field for alignment
+                    
+                    # Footer with translation info and Steam branding
                     embed.set_footer(
-                        text="🇫🇷 Traduit automatiquement de l'anglais",
+                        text="🇫🇷 Traduit automatiquement • Actualités Steam",
                         icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
                     )
                     

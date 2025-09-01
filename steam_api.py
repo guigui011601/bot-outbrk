@@ -129,8 +129,18 @@ class SteamAPI:
                                 'contents': self._clean_html(item.get('contents', '')),
                                 'url': item.get('url', ''),
                                 'author': item.get('author', ''),
-                                'date': item.get('date', 0)
+                                'date': item.get('date', 0),
+                                'feed_label': item.get('feedlabel', ''),
+                                'feed_name': item.get('feedname', ''),
+                                'feed_type': item.get('feed_type', 0),
+                                'appid': item.get('appid', app_id)
                             }
+                            
+                            # Try to extract image from content
+                            image_url = self._extract_image_from_content(item.get('contents', ''))
+                            if image_url:
+                                processed_item['image'] = image_url
+                            
                             processed_news.append(processed_item)
                         
                         return processed_news
@@ -172,6 +182,61 @@ class SteamAPI:
         text = ' '.join(text.split())
         
         return text
+    
+    def _extract_image_from_content(self, content: str) -> Optional[str]:
+        """
+        Extract image URL from news content
+        """
+        if not content:
+            return None
+            
+        import re
+        
+        # Look for Steam CDN images first (most reliable)
+        steam_cdn_pattern = r'https://cdn\.akamai\.steamstatic\.com/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
+        steam_match = re.search(steam_cdn_pattern, content, re.IGNORECASE)
+        if steam_match:
+            return steam_match.group(0)
+        
+        # Look for other Steam static images
+        steamstatic_pattern = r'https://steamcdn-a\.akamaihd\.net/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
+        steamstatic_match = re.search(steamstatic_pattern, content, re.IGNORECASE)
+        if steamstatic_match:
+            return steamstatic_match.group(0)
+        
+        # Look for general image URLs in img tags
+        img_tag_pattern = r'<img[^>]+src=["\']([^"\']+\.(?:jpg|jpeg|png|gif|webp))["\'][^>]*>'
+        img_match = re.search(img_tag_pattern, content, re.IGNORECASE)
+        if img_match:
+            img_url = img_match.group(1)
+            # Only return if it's a valid HTTP(S) URL
+            if img_url.startswith(('http://', 'https://')):
+                return img_url
+        
+        # Look for direct image URLs in content
+        direct_img_pattern = r'https?://[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
+        direct_match = re.search(direct_img_pattern, content, re.IGNORECASE)
+        if direct_match:
+            return direct_match.group(0)
+        
+        return None
+    
+    async def get_game_header_image(self, app_id: int) -> Optional[str]:
+        """
+        Get the header image for a game from Steam store
+        """
+        try:
+            # Steam store header image URL format
+            header_url = f"https://cdn.akamai.steamstatic.com/steam/apps/{app_id}/header.jpg"
+            
+            session = await self.get_session()
+            async with session.head(header_url) as response:
+                if response.status == 200:
+                    return header_url
+        except Exception as e:
+            logger.debug(f"Could not get header image for app {app_id}: {e}")
+        
+        return None
     
     async def __aenter__(self):
         """Async context manager entry"""
