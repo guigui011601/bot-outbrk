@@ -169,11 +169,11 @@ class SteamNewsBot(commands.Bot):
                     await interaction.response.send_message(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.", ephemeral=True)
                     return
                 
-                # Send immediate response and process news directly via interaction
-                await interaction.response.defer()
+                # Send immediate ephemeral response
+                await interaction.response.send_message(f"🔍 Recherche et publication des actualités pour '{game_name}' en cours...", ephemeral=True)
                 
-                # Process news and respond via interaction (this bypasses channel permission issues)
-                asyncio.create_task(self._process_news_via_interaction(interaction, game_name))
+                # Process news and post directly to channel (not via interaction)
+                asyncio.create_task(self._process_and_post_news(interaction, game_name))
                 
             except Exception as e:
                 logger.error(f"Error in steam_news slash command: {e}")
@@ -187,6 +187,125 @@ class SteamNewsBot(commands.Bot):
                 except Exception as followup_error:
                     logger.error(f"Could not send error message: {followup_error}")
     
+    async def _process_and_post_news(self, interaction: discord.Interaction, game_name: str):
+        """Process news and post directly to channel (not via interaction)"""
+        try:
+            await asyncio.sleep(0.5)  # Small delay to ensure initial response is processed
+            
+            # Search for the game
+            game_data = await self.steam_api.search_game(game_name)
+            
+            if not game_data:
+                await interaction.edit_original_response(content=f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
+                return
+            
+            app_id = game_data['appid']
+            game_title = game_data['name']
+            
+            # Update ephemeral message
+            await interaction.edit_original_response(content=f"🔍 Jeu trouvé: **{game_title}**\n📰 Récupération des actualités...")
+            
+            # Fetch news
+            news_items = await self.steam_api.get_game_news(app_id)
+            
+            if not news_items:
+                await interaction.edit_original_response(content=f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
+                return
+                
+            # Update ephemeral message
+            await interaction.edit_original_response(content=f"✅ **{len(news_items[:Config.MAX_NEWS_ITEMS])} actualité(s) trouvée(s) pour {game_title}**\n🔄 Traduction et publication en cours...")
+            
+            # Get game header image once for fallback
+            game_header_image = await self.steam_api.get_game_header_image(app_id)
+            
+            # Get the channel where the command was used
+            channel = interaction.channel
+            
+            # Process and translate news (post directly to channel)
+            for i, news in enumerate(news_items[:Config.MAX_NEWS_ITEMS]):
+                # Translate content
+                translated_title = await self.translator.translate_text(news['title'])
+                translated_content = await self.translator.translate_text(news['contents'][:600])
+                
+                # Create improved embed with Steam-like design
+                embed = discord.Embed(
+                    title=translated_title,
+                    description=translated_content + ("..." if len(news['contents']) > 600 else ""),
+                    color=0x1b2838,  # Steam dark blue/gray
+                    timestamp=datetime.fromtimestamp(news['date'])
+                )
+                
+                # Use game title as author with Steam icon
+                embed.set_author(
+                    name=f"🎮 {game_title}",
+                    icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                )
+                
+                # Add main image if available
+                if 'image' in news and news['image']:
+                    embed.set_image(url=news['image'])
+                    # Also add game header as thumbnail for better visual
+                    if game_header_image:
+                        embed.set_thumbnail(url=game_header_image)
+                elif game_header_image:
+                    # Use game header as main image if no news image
+                    embed.set_image(url=game_header_image)
+                
+                # Add fields with better formatting (more compact)
+                if news['title'] != translated_title and len(news['title']) > 10:
+                    embed.add_field(
+                        name="🌐 Titre Original", 
+                        value=f"*{news['title'][:120]}{'...' if len(news['title']) > 120 else ''}*", 
+                        inline=False
+                    )
+                
+                # Create a more compact info line
+                info_parts = []
+                if news.get('author') and news['author'] != 'Steam':
+                    info_parts.append(f"👤 {news['author']}")
+                info_parts.append(f"📅 <t:{news['date']}:R>")
+                
+                if len(info_parts) == 2:
+                    embed.add_field(name="👤 Auteur", value=info_parts[0].replace("👤 ", ""), inline=True)
+                    embed.add_field(name="📅 Publié", value=info_parts[1].replace("📅 ", ""), inline=True)
+                    embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                else:
+                    embed.add_field(name="📅 Publié", value=info_parts[-1].replace("📅 ", ""), inline=True)
+                    embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                    embed.add_field(name="\u200b", value="\u200b", inline=True)  # Empty field for alignment
+                
+                # Footer with translation info and Steam branding
+                embed.set_footer(
+                    text="🇫🇷 Traduit automatiquement • Actualités Steam",
+                    icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                )
+                
+                # Post directly to channel (public)
+                try:
+                    await channel.send(embed=embed)
+                    logger.info(f"Successfully posted news to channel: {translated_title[:30]}...")
+                except Exception as e:
+                    logger.error(f"Failed to send embed to channel: {e}")
+                    # Try sending as simple text instead
+                    try:
+                        await channel.send(f"**{translated_title}**\n\n{translated_content[:500]}...\n\n🔗 {news['url']}")
+                    except Exception as e2:
+                        logger.error(f"Failed to send text to channel too: {e2}")
+                
+                # Small delay between messages to avoid rate limits
+                if i < len(news_items[:Config.MAX_NEWS_ITEMS]) - 1:
+                    await asyncio.sleep(1)
+            
+            # Update final ephemeral message
+            await interaction.edit_original_response(content=f"✅ **Publication terminée !**\n📰 {len(news_items[:Config.MAX_NEWS_ITEMS])} actualité(s) de **{game_title}** publiée(s) dans le canal.")
+                    
+        except Exception as e:
+            logger.error(f"Error in news processing: {e}")
+            try:
+                await interaction.edit_original_response(content="❌ Une erreur s'est produite lors de la récupération des actualités.")
+            except:
+                pass
+
     async def _process_news_via_interaction(self, interaction: discord.Interaction, game_name: str):
         """Process news via interaction followups to bypass channel permission issues"""
         try:
