@@ -161,14 +161,14 @@ class SteamNewsBot(commands.Bot):
                 # Check rate limiting
                 if not self.check_rate_limit(interaction.user.id):
                     cooldown_time = self.get_cooldown_remaining(interaction.user.id)
-                    await interaction.followup.send(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.")
+                    await interaction.followup.send(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.", ephemeral=True)
                     return
                 
                 # Search for the game silently
                 game_data = await self.steam_api.search_game(game_name)
                 
                 if not game_data:
-                    await interaction.followup.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
+                    await interaction.followup.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.", ephemeral=True)
                     return
                 
                 app_id = game_data['appid']
@@ -178,7 +178,7 @@ class SteamNewsBot(commands.Bot):
                 news_items = await self.steam_api.get_game_news(app_id)
                 
                 if not news_items:
-                    await interaction.followup.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
+                    await interaction.followup.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.", ephemeral=True)
                     return
                 
                 # Get game header image once for fallback

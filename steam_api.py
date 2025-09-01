@@ -136,8 +136,13 @@ class SteamAPI:
                                 'appid': item.get('appid', app_id)
                             }
                             
-                            # Try to extract image from content
+                            # Try to extract image from content or fetch from URL
                             image_url = self._extract_image_from_content(item.get('contents', ''))
+                            
+                            # If no image in text content, try to fetch from the full Steam page
+                            if not image_url and item.get('url'):
+                                image_url = await self._get_image_from_steam_url(item['url'])
+                            
                             if image_url:
                                 processed_item['image'] = image_url
                             
@@ -192,14 +197,20 @@ class SteamAPI:
             
         import re
         
-        # Look for Steam CDN images first (most reliable)
+        # Look for Steam clan/community images (most common in announcements)
+        clan_pattern = r'https://clan\.fastly\.steamstatic\.com/images/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
+        clan_match = re.search(clan_pattern, content, re.IGNORECASE)
+        if clan_match:
+            return clan_match.group(0)
+        
+        # Look for Steam CDN images 
         steam_cdn_pattern = r'https://cdn\.akamai\.steamstatic\.com/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
         steam_match = re.search(steam_cdn_pattern, content, re.IGNORECASE)
         if steam_match:
             return steam_match.group(0)
         
-        # Look for other Steam static images
-        steamstatic_pattern = r'https://steamcdn-a\.akamaihd\.net/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
+        # Look for steamstatic images
+        steamstatic_pattern = r'https://[^"\s<>]*steamstatic[^"\s<>]*\.(?:jpg|jpeg|png|gif|webp)'
         steamstatic_match = re.search(steamstatic_pattern, content, re.IGNORECASE)
         if steamstatic_match:
             return steamstatic_match.group(0)
@@ -218,6 +229,36 @@ class SteamAPI:
         direct_match = re.search(direct_img_pattern, content, re.IGNORECASE)
         if direct_match:
             return direct_match.group(0)
+        
+        return None
+    
+    async def _get_image_from_steam_url(self, url: str) -> Optional[str]:
+        """
+        Fetch image from Steam announcement page
+        """
+        try:
+            session = await self.get_session()
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=10)) as response:
+                if response.status == 200:
+                    content = await response.text()
+                    
+                    # Look for images in the full HTML content
+                    import re
+                    
+                    # Steam clan images pattern
+                    clan_pattern = r'https://clan\.fastly\.steamstatic\.com/images/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
+                    clan_match = re.search(clan_pattern, content, re.IGNORECASE)
+                    if clan_match:
+                        return clan_match.group(0)
+                    
+                    # Other Steam static images
+                    steamstatic_pattern = r'https://[^"\s<>]*steamstatic[^"\s<>]*\.(?:jpg|jpeg|png|gif|webp)'
+                    steamstatic_match = re.search(steamstatic_pattern, content, re.IGNORECASE)
+                    if steamstatic_match:
+                        return steamstatic_match.group(0)
+                        
+        except Exception as e:
+            logger.debug(f"Could not fetch image from Steam URL {url}: {e}")
         
         return None
     
