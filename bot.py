@@ -4,10 +4,12 @@ Handles Discord interactions and command processing
 """
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord import app_commands
 import logging
 import asyncio
+import json
+import os
 from datetime import datetime, timedelta
 from steam_api import SteamAPI
 from translator import Translator
@@ -34,9 +36,15 @@ class SteamNewsBot(commands.Bot):
         # Rate limiting storage
         self.user_cooldowns = {}
         
+        # Auto-posting system
+        self.published_news_file = "published_news.json"
+        self.published_news = self.load_published_news()
+        self.auto_channel_id = None  # Will be set later
+        
         # Add commands
         self.add_commands()
         self.add_slash_commands()
+        self.setup_auto_commands()
     
     def add_commands(self):
         """Add bot commands"""
@@ -360,6 +368,11 @@ class SteamNewsBot(commands.Bot):
             except Exception as e:
                 logger.error(f"Failed to sync commands: {e}")
             
+            # Start auto news checking
+            if not self.auto_news_checker.is_running():
+                self.auto_news_checker.start()
+                logger.info("Started automatic news checking for OUTBRK")
+            
             # Set bot status
             activity = discord.Game(name="Steam News | /steam-news")
             await self.change_presence(activity=activity)
@@ -367,6 +380,203 @@ class SteamNewsBot(commands.Bot):
             print(f"✅ Bot is ready! Logged in as {self.user}")
         else:
             logger.error("Bot user is None - this should not happen")
+    
+    def load_published_news(self):
+        """Load previously published news from file"""
+        try:
+            if os.path.exists(self.published_news_file):
+                with open(self.published_news_file, 'r') as f:
+                    return set(json.load(f))
+            return set()
+        except Exception as e:
+            logger.error(f"Error loading published news: {e}")
+            return set()
+    
+    def save_published_news(self):
+        """Save published news to file"""
+        try:
+            with open(self.published_news_file, 'w') as f:
+                json.dump(list(self.published_news), f)
+        except Exception as e:
+            logger.error(f"Error saving published news: {e}")
+    
+    @tasks.loop(hours=1)  # Check every hour
+    async def auto_news_checker(self):
+        """Automatically check for new OUTBRK news and post them"""
+        try:
+            if not self.auto_channel_id:
+                logger.warning("Auto channel not set, skipping auto news check")
+                return
+            
+            channel = self.get_channel(self.auto_channel_id)
+            if not channel:
+                logger.error(f"Could not find channel {self.auto_channel_id}")
+                return
+            
+            logger.info("Checking for new OUTBRK news...")
+            
+            # Get OUTBRK news (app_id: 1107320)
+            news_items = await self.steam_api.get_game_news(1107320)
+            
+            if not news_items:
+                return
+            
+            # Get game header image once for fallback
+            game_header_image = await self.steam_api.get_game_header_image(1107320)
+            
+            new_news_found = False
+            
+            # Check each news item
+            for news in news_items[:Config.MAX_NEWS_ITEMS]:
+                news_id = f"{news['gid']}"  # Unique identifier
+                
+                if news_id not in self.published_news:
+                    # This is a new news item!
+                    new_news_found = True
+                    logger.info(f"Found new OUTBRK news: {news['title'][:50]}...")
+                    
+                    # Translate content
+                    translated_title = await self.translator.translate_text(news['title'])
+                    translated_content = await self.translator.translate_text(news['contents'][:600])
+                    
+                    # Create embed with Steam-like design
+                    embed = discord.Embed(
+                        title=translated_title,
+                        description=translated_content + ("..." if len(news['contents']) > 600 else ""),
+                        color=0x1b2838,  # Steam dark blue/gray
+                        timestamp=datetime.fromtimestamp(news['date'])
+                    )
+                    
+                    # Use game title as author with Steam icon
+                    embed.set_author(
+                        name="🎮 OUTBRK - Nouvelle actualité !",
+                        icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                    )
+                    
+                    # Add main image if available
+                    if 'image' in news and news['image']:
+                        embed.set_image(url=news['image'])
+                        if game_header_image:
+                            embed.set_thumbnail(url=game_header_image)
+                    elif game_header_image:
+                        embed.set_image(url=game_header_image)
+                    
+                    # Add fields
+                    if news['title'] != translated_title and len(news['title']) > 10:
+                        embed.add_field(
+                            name="🌐 Titre Original", 
+                            value=f"*{news['title'][:120]}{'...' if len(news['title']) > 120 else ''}*", 
+                            inline=False
+                        )
+                    
+                    info_parts = []
+                    if news.get('author') and news['author'] != 'Steam':
+                        info_parts.append(f"👤 {news['author']}")
+                    info_parts.append(f"📅 <t:{news['date']}:R>")
+                    
+                    if len(info_parts) == 2:
+                        embed.add_field(name="👤 Auteur", value=info_parts[0].replace("👤 ", ""), inline=True)
+                        embed.add_field(name="📅 Publié", value=info_parts[1].replace("📅 ", ""), inline=True)
+                        embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                    else:
+                        embed.add_field(name="📅 Publié", value=info_parts[-1].replace("📅 ", ""), inline=True)
+                        embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                        embed.add_field(name="\u200b", value="\u200b", inline=True)
+                    
+                    # Footer
+                    embed.set_footer(
+                        text="🇫🇷 Traduit automatiquement • Actualités Steam • 🤖 Publié automatiquement",
+                        icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                    )
+                    
+                    try:
+                        # Send the news
+                        await channel.send("🚨 **Nouvelle actualité OUTBRK !** 🚨", embed=embed)
+                        
+                        # Mark as published
+                        self.published_news.add(news_id)
+                        self.save_published_news()
+                        
+                        logger.info(f"Successfully posted new OUTBRK news: {translated_title[:30]}...")
+                        
+                        # Small delay between multiple news
+                        await asyncio.sleep(2)
+                        
+                    except Exception as e:
+                        logger.error(f"Failed to post auto news: {e}")
+            
+            if not new_news_found:
+                logger.info("No new OUTBRK news found")
+                
+        except Exception as e:
+            logger.error(f"Error in auto news checker: {e}")
+    
+    @auto_news_checker.before_loop
+    async def before_auto_news_checker(self):
+        """Wait for bot to be ready before starting auto checker"""
+        await self.wait_until_ready()
+    
+    def setup_auto_commands(self):
+        """Setup automatic posting commands"""
+        @self.tree.command(name='setup-auto', description='Configurer la publication automatique OUTBRK dans ce channel')
+        async def setup_auto_slash(interaction: discord.Interaction):
+            """Setup automatic posting in this channel"""
+            try:
+                self.auto_channel_id = interaction.channel.id
+                
+                embed = discord.Embed(
+                    title="🤖 Publication automatique activée !",
+                    description=f"Les nouvelles actualités OUTBRK seront automatiquement publiées dans {interaction.channel.mention}",
+                    color=0x1b2838
+                )
+                
+                embed.add_field(
+                    name="📅 Fréquence", 
+                    value="Vérification toutes les heures", 
+                    inline=True
+                )
+                embed.add_field(
+                    name="🎮 Jeu surveillé", 
+                    value="OUTBRK (ID: 1107320)", 
+                    inline=True
+                )
+                embed.add_field(
+                    name="🇫🇷 Langue", 
+                    value="Traduction française automatique", 
+                    inline=True
+                )
+                
+                embed.set_footer(
+                    text="Le bot vérifiera automatiquement les nouvelles actualités",
+                    icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                )
+                
+                await interaction.response.send_message(embed=embed)
+                logger.info(f"Auto posting setup for channel {interaction.channel.id}")
+                
+            except Exception as e:
+                logger.error(f"Error in setup_auto command: {e}")
+                await interaction.response.send_message("❌ Erreur lors de la configuration.", ephemeral=True)
+        
+        @self.tree.command(name='stop-auto', description='Arrêter la publication automatique')
+        async def stop_auto_slash(interaction: discord.Interaction):
+            """Stop automatic posting"""
+            try:
+                if self.auto_channel_id:
+                    self.auto_channel_id = None
+                    embed = discord.Embed(
+                        title="🛑 Publication automatique désactivée",
+                        description="La publication automatique des actualités OUTBRK a été arrêtée.",
+                        color=0xff6b35
+                    )
+                    await interaction.response.send_message(embed=embed)
+                    logger.info("Auto posting stopped")
+                else:
+                    await interaction.response.send_message("❌ La publication automatique n'était pas activée.", ephemeral=True)
+                    
+            except Exception as e:
+                logger.error(f"Error in stop_auto command: {e}")
+                await interaction.response.send_message("❌ Erreur lors de l'arrêt.", ephemeral=True)
     
     async def on_command_error(self, ctx, error):
         """Handle command errors"""
