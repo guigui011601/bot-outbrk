@@ -105,13 +105,21 @@ class Config:
         except ValueError:
             return default
 
-# Environment-specific overrides
-if os.getenv('ENVIRONMENT') == 'development':
-    Config.LOG_LEVEL = 'DEBUG'
-    Config.RATE_LIMIT_SECONDS = 10  # Shorter cooldown for development
-    Config.MAX_NEWS_ITEMS = 2
+# Environment-specific overrides - Using class variables instead of dynamic assignment
+class DevelopmentConfig(Config):
+    """Development environment configuration"""
+    LOG_LEVEL = 'DEBUG'
+    RATE_LIMIT_SECONDS = 10  # Shorter cooldown for development
+    MAX_NEWS_ITEMS = 2
 
+class ProductionConfig(Config):
+    """Production environment configuration"""
+    LOG_LEVEL = 'WARNING'
+    RATE_LIMIT_SECONDS = 60  # Longer cooldown for production
+    TRANSLATION_RATE_LIMIT = 15  # More conservative rate limiting
+
+# Select configuration based on environment
+if os.getenv('ENVIRONMENT') == 'development':
+    Config = DevelopmentConfig
 elif os.getenv('ENVIRONMENT') == 'production':
-    Config.LOG_LEVEL = 'WARNING'
-    Config.RATE_LIMIT_SECONDS = 60  # Longer cooldown for production
-    Config.TRANSLATION_RATE_LIMIT = 15  # More conservative rate limiting
+    Config = ProductionConfig
