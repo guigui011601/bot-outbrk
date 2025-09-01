@@ -161,8 +161,8 @@ class SteamNewsBot(commands.Bot):
                     await interaction.response.send_message(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.", ephemeral=True)
                     return
                 
-                # Defer the response since this will take time - do this AFTER rate limit check
-                await interaction.response.defer()
+                # Defer the response silently - ephemeral so it doesn't show the command usage
+                await interaction.response.defer(ephemeral=True)
                 
                 # Search for the game silently
                 game_data = await self.steam_api.search_game(game_name)
@@ -180,6 +180,9 @@ class SteamNewsBot(commands.Bot):
                 if not news_items:
                     await interaction.followup.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.", ephemeral=True)
                     return
+                
+                # Send a discrete confirmation that the command was received
+                await interaction.followup.send(f"✅ Actualités {game_title} en cours de publication...", ephemeral=True)
                 
                 # Get game header image once for fallback
                 game_header_image = await self.steam_api.get_game_header_image(app_id)
@@ -243,7 +246,8 @@ class SteamNewsBot(commands.Bot):
                         icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
                     )
                     
-                    await interaction.followup.send(embed=embed)
+                    # Send to channel directly, not as followup to avoid showing command link
+                    await interaction.channel.send(embed=embed)
                     
                     # Small delay between messages to avoid rate limits
                     if i < len(news_items[:Config.MAX_NEWS_ITEMS]) - 1:
