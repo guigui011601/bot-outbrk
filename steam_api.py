@@ -245,17 +245,57 @@ class SteamAPI:
                     # Look for images in the full HTML content
                     import re
                     
-                    # Find ALL Steam clan images
-                    clan_pattern = r'https://clan\.fastly\.steamstatic\.com/images/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
-                    clan_matches = re.findall(clan_pattern, content, re.IGNORECASE)
+                    # First check if this is a Steam Community URL, try to find the actual content
+                    if 'steamcommunity.com' in url:
+                        # Look for announcement content section
+                        content_section = content
+                        for section_id in ['news_content', 'bodytext', 'announcement_content', 'content']:
+                            if f'id="{section_id}"' in content:
+                                try:
+                                    start_marker = f'id="{section_id}"'
+                                    start_idx = content.find(start_marker)
+                                    if start_idx != -1:
+                                        # Find the opening tag
+                                        tag_start = content.rfind('<', 0, start_idx + len(start_marker))
+                                        if tag_start != -1:
+                                            tag_name = content[tag_start+1:content.find(' ', tag_start)].split('>')[0]
+                                            # Find closing tag
+                                            end_marker = f'</{tag_name}>'
+                                            end_idx = content.find(end_marker, start_idx)
+                                            if end_idx != -1:
+                                                content_section = content[start_idx:end_idx]
+                                                break
+                                except:
+                                    continue
+                    else:
+                        content_section = content
                     
-                    if clan_matches:
+                    # Find ALL Steam clan images in the content section
+                    clan_pattern = r'https://clan\.fastly\.steamstatic\.com/images/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
+                    clan_matches = re.findall(clan_pattern, content_section, re.IGNORECASE)
+                    
+                    # Also look for steamcdn and other Steam image patterns
+                    other_patterns = [
+                        r'https://steamcdn-a\.akamaihd\.net/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)',
+                        r'https://cdn\.akamai\.steamstatic\.com/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)',
+                        r'https://shared\.fastly\.steamstatic\.com/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
+                    ]
+                    
+                    all_images = clan_matches.copy()
+                    for pattern in other_patterns:
+                        matches = re.findall(pattern, content_section, re.IGNORECASE)
+                        all_images.extend(matches)
+                    
+                    if all_images:
+                        # Remove duplicates while preserving order
+                        unique_images = list(dict.fromkeys(all_images))
+                        
                         # Filter out small images (likely icons) and header images
                         content_images = []
                         
-                        for img_url in clan_matches:
-                            # Skip likely icon/header images (look for larger resolution indicators)
-                            if any(skip_term in img_url.lower() for skip_term in ['icon', 'avatar', 'thumb', 'small']):
+                        for img_url in unique_images:
+                            # Skip likely icon/header images
+                            if any(skip_term in img_url.lower() for skip_term in ['icon', 'avatar', 'thumb', 'small', 'capsule_184x69']):
                                 continue
                             
                             # Skip header images (they usually have specific pattern)
@@ -269,13 +309,7 @@ class SteamAPI:
                             return content_images[0]
                         
                         # If no content images, return first image as fallback
-                        return clan_matches[0]
-                    
-                    # Fallback to other Steam static images
-                    steamstatic_pattern = r'https://[^"\s<>]*steamstatic[^"\s<>]*\.(?:jpg|jpeg|png|gif|webp)'
-                    steamstatic_matches = re.findall(steamstatic_pattern, content, re.IGNORECASE)
-                    if steamstatic_matches:
-                        return steamstatic_matches[0]
+                        return unique_images[0]
                         
         except Exception as e:
             logger.debug(f"Could not fetch image from Steam URL {url}: {e}")
