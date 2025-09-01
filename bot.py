@@ -39,7 +39,7 @@ class SteamNewsBot(commands.Bot):
         # Auto-posting system
         self.published_news_file = "published_news.json"
         self.published_news = self.load_published_news()
-        self.auto_channel_id = 1412064662614184067  # Set your channel ID here
+        self.auto_channel_id = 1412099669009367151  # Set your channel ID here
         
         # Add commands
         self.add_commands()
@@ -537,8 +537,12 @@ class SteamNewsBot(commands.Bot):
         """Load previously published news from file"""
         try:
             if os.path.exists(self.published_news_file):
-                with open(self.published_news_file, 'r') as f:
-                    return set(json.load(f))
+                with open(self.published_news_file, 'r', encoding='utf-8') as f:
+                    loaded_news = set(json.load(f))
+                    logger.info(f"Loaded {len(loaded_news)} previously published news IDs")
+                    return loaded_news
+            else:
+                logger.info("No published news file found, starting fresh")
             return set()
         except Exception as e:
             logger.error(f"Error loading published news: {e}")
@@ -547,12 +551,17 @@ class SteamNewsBot(commands.Bot):
     def save_published_news(self):
         """Save published news to file"""
         try:
-            with open(self.published_news_file, 'w') as f:
-                json.dump(list(self.published_news), f)
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(self.published_news_file) if os.path.dirname(self.published_news_file) else '.', exist_ok=True)
+            
+            with open(self.published_news_file, 'w', encoding='utf-8') as f:
+                json.dump(list(self.published_news), f, ensure_ascii=False, indent=2)
+            
+            logger.debug(f"Saved {len(self.published_news)} published news IDs to {self.published_news_file}")
         except Exception as e:
             logger.error(f"Error saving published news: {e}")
     
-    @tasks.loop(hours=1)  # Check every hour
+    @tasks.loop(hours=2)  # Check every 2 hours to reduce API stress
     async def auto_news_checker(self):
         """Automatically check for new OUTBRK news and post them"""
         try:
@@ -582,6 +591,7 @@ class SteamNewsBot(commands.Bot):
                 return
             
             logger.info("Checking for new OUTBRK news...")
+            logger.debug(f"Currently have {len(self.published_news)} published news IDs")
             
             # Get OUTBRK news (app_id: 1107320)
             news_items = await self.steam_api.get_game_news(1107320)
@@ -594,11 +604,20 @@ class SteamNewsBot(commands.Bot):
             game_header_image = await self.steam_api.get_game_header_image(1107320)
             
             new_news_found = False
+            posted_count = 0
+            max_posts_per_check = 3  # Limit to 3 news per check to avoid rate limits
             
             # Sort news by date (oldest first, newest last) to check in chronological order
             sorted_news = sorted(news_items[:Config.MAX_NEWS_ITEMS], key=lambda x: x.get('date', 0))
             
-            # Check each news item
+            # Process news items
+            for news in sorted_news:
+                if posted_count >= max_posts_per_check:
+                    logger.info(f"Reached max posts limit ({max_posts_per_check}) for this check")
+                    break
+            
+            # Check each news item for new content first
+            new_news_items = []
             for news in sorted_news:
                 # Create unique identifier using URL or title+date combination
                 if 'url' in news and news['url']:
@@ -608,79 +627,116 @@ class SteamNewsBot(commands.Bot):
                     news_id = f"{news.get('title', 'no_title')}_{news.get('date', 0)}"
                 
                 if news_id not in self.published_news:
-                    # This is a new news item!
-                    new_news_found = True
+                    new_news_items.append(news)
                     logger.info(f"Found new OUTBRK news: {news['title'][:50]}...")
-                    
-                    # Translate content
-                    translated_title = await self.translator.translate_text(news['title'])
-                    translated_content = await self.translator.translate_text(news['contents'][:600])
-                    
-                    # Create embed with Steam-like design
-                    embed = discord.Embed(
-                        title=translated_title,
-                        description=translated_content + ("..." if len(news['contents']) > 600 else ""),
-                        color=0x1b2838,  # Steam dark blue/gray
-                        timestamp=datetime.fromtimestamp(news['date'])
+            
+            if not new_news_items:
+                logger.info("No new OUTBRK news found")
+                return
+            
+            # Process only new news items
+            for news in new_news_items:
+                # Create unique identifier for saving
+                if 'url' in news and news['url']:
+                    news_id = news['url']
+                else:
+                    news_id = f"{news.get('title', 'no_title')}_{news.get('date', 0)}"
+                
+                # This is a new news item!
+                new_news_found = True
+                
+                # Translate content
+                translated_title = await self.translator.translate_text(news['title'])
+                translated_content = await self.translator.translate_text(news['contents'][:600])
+                
+                # Create embed with Steam-like design
+                embed = discord.Embed(
+                    title=translated_title,
+                    description=translated_content + ("..." if len(news['contents']) > 600 else ""),
+                    color=0x1b2838,  # Steam dark blue/gray
+                    timestamp=datetime.fromtimestamp(news['date'])
+                )
+                
+                # Use game title as author with Steam icon
+                embed.set_author(
+                    name="🎮 OUTBRK",
+                    icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                )
+                
+                # Add main image if available
+                if 'image' in news and news['image']:
+                    embed.set_image(url=news['image'])
+                    if game_header_image:
+                        embed.set_thumbnail(url=game_header_image)
+                elif game_header_image:
+                    embed.set_image(url=game_header_image)
+                
+                # Add fields
+                if news['title'] != translated_title and len(news['title']) > 10:
+                    embed.add_field(
+                        name="🌐 Titre Original", 
+                        value=f"*{news['title'][:120]}{'...' if len(news['title']) > 120 else ''}*", 
+                        inline=False
                     )
+                
+                info_parts = []
+                if news.get('author') and news['author'] != 'Steam':
+                    info_parts.append(f"👤 {news['author']}")
+                info_parts.append(f"📅 <t:{news['date']}:R>")
+                
+                if len(info_parts) == 2:
+                    embed.add_field(name="👤 Auteur", value=info_parts[0].replace("👤 ", ""), inline=True)
+                    embed.add_field(name="📅 Publié", value=info_parts[1].replace("📅 ", ""), inline=True)
+                    embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                else:
+                    embed.add_field(name="📅 Publié", value=info_parts[-1].replace("📅 ", ""), inline=True)
+                    embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                    embed.add_field(name="\u200b", value="\u200b", inline=True)
+                
+                # Footer
+                embed.set_footer(
+                    text="🇫🇷 Traduit automatiquement • Actualités Steam",
+                    icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
+                )
+                
+                try:
+                    # Send only the embed, no additional message
+                    await channel.send(embed=embed)
                     
-                    # Use game title as author with Steam icon
-                    embed.set_author(
-                        name="🎮 OUTBRK",
-                        icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
-                    )
+                    # Mark as published with debug info
+                    self.published_news.add(news_id)
+                    self.save_published_news()
+                    posted_count += 1
                     
-                    # Add main image if available
-                    if 'image' in news and news['image']:
-                        embed.set_image(url=news['image'])
-                        if game_header_image:
-                            embed.set_thumbnail(url=game_header_image)
-                    elif game_header_image:
-                        embed.set_image(url=game_header_image)
+                    logger.info(f"Successfully posted and saved OUTBRK news: {translated_title[:30]}...")
+                    logger.debug(f"News ID saved: {news_id}")
+                    logger.debug(f"Total published news count: {len(self.published_news)}")
                     
-                    # Add fields
-                    if news['title'] != translated_title and len(news['title']) > 10:
-                        embed.add_field(
-                            name="🌐 Titre Original", 
-                            value=f"*{news['title'][:120]}{'...' if len(news['title']) > 120 else ''}*", 
-                            inline=False
-                        )
+                    # Longer delay between multiple news to avoid rate limits
+                    await asyncio.sleep(5)
                     
-                    info_parts = []
-                    if news.get('author') and news['author'] != 'Steam':
-                        info_parts.append(f"👤 {news['author']}")
-                    info_parts.append(f"📅 <t:{news['date']}:R>")
-                    
-                    if len(info_parts) == 2:
-                        embed.add_field(name="👤 Auteur", value=info_parts[0].replace("👤 ", ""), inline=True)
-                        embed.add_field(name="📅 Publié", value=info_parts[1].replace("📅 ", ""), inline=True)
-                        embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
+                except discord.HTTPException as e:
+                    if e.status == 429:  # Rate limited
+                        logger.warning(f"Rate limited, waiting {e.retry_after} seconds...")
+                        await asyncio.sleep(e.retry_after + 1)
+                        # Try again once
+                        try:
+                            await channel.send(embed=embed)
+                            self.published_news.add(news_id)
+                            self.save_published_news()
+                            posted_count += 1
+                            logger.info(f"Successfully posted after rate limit: {translated_title[:30]}...")
+                        except Exception as retry_e:
+                            logger.error(f"Failed to post after rate limit retry: {retry_e}")
                     else:
-                        embed.add_field(name="📅 Publié", value=info_parts[-1].replace("📅 ", ""), inline=True)
-                        embed.add_field(name="🔗 Source", value=f"[Lire sur Steam]({news['url']})", inline=True)
-                        embed.add_field(name="\u200b", value="\u200b", inline=True)
-                    
-                    # Footer
-                    embed.set_footer(
-                        text="🇫🇷 Traduit automatiquement • Actualités Steam",
-                        icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
-                    )
-                    
-                    try:
-                        # Send only the embed, no additional message
-                        await channel.send(embed=embed)
-                        
-                        # Mark as published
-                        self.published_news.add(news_id)
-                        self.save_published_news()
-                        
-                        logger.info(f"Successfully posted new OUTBRK news: {translated_title[:30]}...")
-                        
-                        # Small delay between multiple news
-                        await asyncio.sleep(2)
-                        
-                    except Exception as e:
-                        logger.error(f"Failed to post auto news: {e}")
+                        logger.error(f"Discord HTTP error posting auto news: {e}")
+                except Exception as e:
+                    logger.error(f"Failed to post auto news: {e}")
+                
+                # Check if we've reached the posting limit
+                if posted_count >= max_posts_per_check:
+                    logger.info(f"Reached max posts limit ({max_posts_per_check}) for this auto check")
+                    break
             
             if not new_news_found:
                 logger.info("No new OUTBRK news found")
@@ -692,6 +748,8 @@ class SteamNewsBot(commands.Bot):
     async def before_auto_news_checker(self):
         """Wait for bot to be ready before starting auto checker"""
         await self.wait_until_ready()
+        # Additional delay to avoid startup rate limits
+        await asyncio.sleep(10)
     
     def setup_auto_commands(self):
         """Setup automatic posting commands"""
