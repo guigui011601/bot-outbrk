@@ -39,7 +39,7 @@ class SteamNewsBot(commands.Bot):
         # Auto-posting system
         self.published_news_file = "published_news.json"
         self.published_news = self.load_published_news()
-        self.auto_channel_id = None  # Will be set later
+        self.auto_channel_id = 1412064662614184067  # Set your channel ID here
         
         # Add commands
         self.add_commands()
