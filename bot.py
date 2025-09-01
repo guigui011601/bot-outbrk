@@ -161,15 +161,11 @@ class SteamNewsBot(commands.Bot):
                     await interaction.response.send_message(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.", ephemeral=True)
                     return
                 
-                # Send immediate response
-                await interaction.response.send_message("✅ Recherche en cours...", ephemeral=True)
+                # Send immediate response and process news directly via interaction
+                await interaction.response.defer()
                 
-                # Get channel and start immediate processing
-                channel = interaction.channel
-                user_id = interaction.user.id
-                
-                # Process in background task
-                asyncio.create_task(self._process_news_simple(channel, game_name, user_id))
+                # Process news and respond via interaction (this bypasses channel permission issues)
+                asyncio.create_task(self._process_news_via_interaction(interaction, game_name))
                 
             except Exception as e:
                 logger.error(f"Error in steam_news slash command: {e}")
@@ -183,19 +179,16 @@ class SteamNewsBot(commands.Bot):
                 except Exception as followup_error:
                     logger.error(f"Could not send error message: {followup_error}")
     
-    async def _process_news_simple(self, channel, game_name: str, user_id: int):
-        """Process news without interaction dependencies"""
+    async def _process_news_via_interaction(self, interaction: discord.Interaction, game_name: str):
+        """Process news via interaction followups to bypass channel permission issues"""
         try:
-            await asyncio.sleep(0.5)  # Small delay to ensure response is sent
+            await asyncio.sleep(0.5)  # Small delay to ensure defer is processed
             
             # Search for the game
             game_data = await self.steam_api.search_game(game_name)
             
             if not game_data:
-                try:
-                    await channel.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
-                except Exception as e:
-                    logger.error(f"Cannot send to channel: {e}")
+                await interaction.followup.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
                 return
             
             app_id = game_data['appid']
@@ -205,20 +198,20 @@ class SteamNewsBot(commands.Bot):
             news_items = await self.steam_api.get_game_news(app_id)
             
             if not news_items:
-                try:
-                    await channel.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
-                except Exception as e:
-                    logger.error(f"Cannot send to channel: {e}")
+                await interaction.followup.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
                 return
                 
             # Get game header image once for fallback
             game_header_image = await self.steam_api.get_game_header_image(app_id)
             
-            # Process and translate news (send embeds only)
+            # Send a confirmation message first
+            await interaction.followup.send(f"📰 **Actualités {game_title}** :")
+            
+            # Process and translate news (send embeds via followup)
             for i, news in enumerate(news_items[:Config.MAX_NEWS_ITEMS]):
                 # Translate content
                 translated_title = await self.translator.translate_text(news['title'])
-                translated_content = await self.translator.translate_text(news['contents'][:600])  # Slightly longer for better context
+                translated_content = await self.translator.translate_text(news['contents'][:600])
                 
                 # Create improved embed with Steam-like design
                 embed = discord.Embed(
@@ -273,26 +266,26 @@ class SteamNewsBot(commands.Bot):
                     icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
                 )
                 
-                # Send to channel directly
+                # Send via interaction followup (this should work even with limited permissions)
                 try:
-                    await channel.send(embed=embed)
-                    logger.info(f"Successfully sent news: {translated_title[:30]}...")
+                    await interaction.followup.send(embed=embed)
+                    logger.info(f"Successfully sent news via followup: {translated_title[:30]}...")
                 except Exception as e:
-                    logger.error(f"Failed to send embed to channel: {e}")
+                    logger.error(f"Failed to send embed via followup: {e}")
                     # Try sending as simple text instead
                     try:
-                        await channel.send(f"**{translated_title}**\n\n{translated_content[:500]}...\n\n🔗 {news['url']}")
+                        await interaction.followup.send(f"**{translated_title}**\n\n{translated_content[:500]}...\n\n🔗 {news['url']}")
                     except Exception as e2:
-                        logger.error(f"Failed to send text message too: {e2}")
+                        logger.error(f"Failed to send text via followup too: {e2}")
                 
                 # Small delay between messages to avoid rate limits
                 if i < len(news_items[:Config.MAX_NEWS_ITEMS]) - 1:
                     await asyncio.sleep(1)
                     
         except Exception as e:
-            logger.error(f"Error in simple news processing: {e}")
+            logger.error(f"Error in interaction news processing: {e}")
             try:
-                await channel.send("❌ Une erreur s'est produite lors de la récupération des actualités.")
+                await interaction.followup.send("❌ Une erreur s'est produite lors de la récupération des actualités.")
             except:
                 pass
         
