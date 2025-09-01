@@ -234,7 +234,7 @@ class SteamAPI:
     
     async def _get_image_from_steam_url(self, url: str) -> Optional[str]:
         """
-        Fetch image from Steam announcement page
+        Fetch images from Steam announcement page (prioritize content images over header)
         """
         try:
             session = await self.get_session()
@@ -245,17 +245,37 @@ class SteamAPI:
                     # Look for images in the full HTML content
                     import re
                     
-                    # Steam clan images pattern
+                    # Find ALL Steam clan images
                     clan_pattern = r'https://clan\.fastly\.steamstatic\.com/images/[^"\s<>]+\.(?:jpg|jpeg|png|gif|webp)'
-                    clan_match = re.search(clan_pattern, content, re.IGNORECASE)
-                    if clan_match:
-                        return clan_match.group(0)
+                    clan_matches = re.findall(clan_pattern, content, re.IGNORECASE)
                     
-                    # Other Steam static images
+                    if clan_matches:
+                        # Filter out small images (likely icons) and header images
+                        content_images = []
+                        
+                        for img_url in clan_matches:
+                            # Skip likely icon/header images (look for larger resolution indicators)
+                            if any(skip_term in img_url.lower() for skip_term in ['icon', 'avatar', 'thumb', 'small']):
+                                continue
+                            
+                            # Skip header images (they usually have specific pattern)
+                            if 'header' in img_url.lower():
+                                continue
+                                
+                            content_images.append(img_url)
+                        
+                        # Return the first content image (not header/icon)
+                        if content_images:
+                            return content_images[0]
+                        
+                        # If no content images, return first image as fallback
+                        return clan_matches[0]
+                    
+                    # Fallback to other Steam static images
                     steamstatic_pattern = r'https://[^"\s<>]*steamstatic[^"\s<>]*\.(?:jpg|jpeg|png|gif|webp)'
-                    steamstatic_match = re.search(steamstatic_pattern, content, re.IGNORECASE)
-                    if steamstatic_match:
-                        return steamstatic_match.group(0)
+                    steamstatic_matches = re.findall(steamstatic_pattern, content, re.IGNORECASE)
+                    if steamstatic_matches:
+                        return steamstatic_matches[0]
                         
         except Exception as e:
             logger.debug(f"Could not fetch image from Steam URL {url}: {e}")

@@ -207,9 +207,12 @@ class SteamNewsBot(commands.Bot):
                     # Add main image if available
                     if 'image' in news and news['image']:
                         embed.set_image(url=news['image'])
+                        # Also add game header as thumbnail for better visual
+                        if game_header_image:
+                            embed.set_thumbnail(url=game_header_image)
                     elif game_header_image:
-                        # Use game header as thumbnail if no news image
-                        embed.set_thumbnail(url=game_header_image)
+                        # Use game header as main image if no news image
+                        embed.set_image(url=game_header_image)
                     
                     # Add fields with better formatting (more compact)
                     if news['title'] != translated_title and len(news['title']) > 10:
