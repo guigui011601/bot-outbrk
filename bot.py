@@ -161,14 +161,14 @@ class SteamNewsBot(commands.Bot):
                     await interaction.response.send_message(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.", ephemeral=True)
                     return
                 
-                # Defer the response silently - ephemeral so it doesn't show the command usage
-                await interaction.response.defer(ephemeral=True)
+                # Send immediate ephemeral response to acknowledge command
+                await interaction.response.send_message("🔍 Recherche des actualités en cours...", ephemeral=True)
                 
                 # Search for the game silently
                 game_data = await self.steam_api.search_game(game_name)
                 
                 if not game_data:
-                    await interaction.followup.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.", ephemeral=True)
+                    await interaction.edit_original_response(content=f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
                     return
                 
                 app_id = game_data['appid']
@@ -178,11 +178,11 @@ class SteamNewsBot(commands.Bot):
                 news_items = await self.steam_api.get_game_news(app_id)
                 
                 if not news_items:
-                    await interaction.followup.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.", ephemeral=True)
+                    await interaction.edit_original_response(content=f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
                     return
                 
-                # Send a discrete confirmation that the command was received
-                await interaction.followup.send(f"✅ Actualités {game_title} en cours de publication...", ephemeral=True)
+                # Update the ephemeral message
+                await interaction.edit_original_response(content=f"✅ Publication des actualités {game_title} en cours...")
                 
                 # Get game header image once for fallback
                 game_header_image = await self.steam_api.get_game_header_image(app_id)
@@ -258,10 +258,7 @@ class SteamNewsBot(commands.Bot):
                 error_msg = f"❌ Une erreur s'est produite lors de la récupération des actualités."
                 
                 try:
-                    if not interaction.response.is_done():
-                        await interaction.response.send_message(error_msg, ephemeral=True)
-                    else:
-                        await interaction.followup.send(error_msg, ephemeral=True)
+                    await interaction.edit_original_response(content=error_msg)
                 except discord.NotFound:
                     # Interaction already expired, can't respond
                     logger.warning("Interaction expired, cannot send error message")
