@@ -161,11 +161,15 @@ class SteamNewsBot(commands.Bot):
                     await interaction.response.send_message(f"⏰ Veuillez attendre {cooldown_time} secondes avant d'utiliser cette commande à nouveau.", ephemeral=True)
                     return
                 
-                # Send immediate response and start processing in background
-                await interaction.response.send_message("✅ Commande reçue, traitement en cours...", ephemeral=True)
+                # Send immediate response
+                await interaction.response.send_message("✅ Recherche en cours...", ephemeral=True)
                 
-                # Process everything asynchronously without blocking the interaction
-                asyncio.create_task(self._process_news_async(interaction, game_name))
+                # Get channel and start immediate processing
+                channel = interaction.channel
+                user_id = interaction.user.id
+                
+                # Process in background task
+                asyncio.create_task(self._process_news_simple(channel, game_name, user_id))
                 
             except Exception as e:
                 logger.error(f"Error in steam_news slash command: {e}")
@@ -179,17 +183,16 @@ class SteamNewsBot(commands.Bot):
                 except Exception as followup_error:
                     logger.error(f"Could not send error message: {followup_error}")
     
-    async def _process_news_async(self, interaction: discord.Interaction, game_name: str):
-        """Process news asynchronously to avoid interaction timeout"""
+    async def _process_news_simple(self, channel, game_name: str, user_id: int):
+        """Process news without interaction dependencies"""
         try:
+            await asyncio.sleep(0.5)  # Small delay to ensure response is sent
+            
             # Search for the game
             game_data = await self.steam_api.search_game(game_name)
             
             if not game_data:
-                try:
-                    await interaction.edit_original_response(content=f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
-                except:
-                    pass
+                await channel.send(f"❌ Impossible de trouver un jeu nommé '{game_name}' sur Steam.")
                 return
             
             app_id = game_data['appid']
@@ -199,17 +202,8 @@ class SteamNewsBot(commands.Bot):
             news_items = await self.steam_api.get_game_news(app_id)
             
             if not news_items:
-                try:
-                    await interaction.edit_original_response(content=f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
-                except:
-                    pass
+                await channel.send(f"❌ Aucune actualité récente trouvée pour '{game_title}'.")
                 return
-            
-            # Update the ephemeral message
-            try:
-                await interaction.edit_original_response(content=f"✅ Publication des actualités {game_title} en cours...")
-            except:
-                pass
                 
             # Get game header image once for fallback
             game_header_image = await self.steam_api.get_game_header_image(app_id)
@@ -273,15 +267,19 @@ class SteamNewsBot(commands.Bot):
                     icon_url="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/steamworks_docs/english/steam_icon.png"
                 )
                 
-                # Send to channel directly, not as followup to avoid showing command link
-                await interaction.channel.send(embed=embed)
+                # Send to channel directly
+                await channel.send(embed=embed)
                 
                 # Small delay between messages to avoid rate limits
                 if i < len(news_items[:Config.MAX_NEWS_ITEMS]) - 1:
                     await asyncio.sleep(1)
                     
         except Exception as e:
-            logger.error(f"Error in async news processing: {e}")
+            logger.error(f"Error in simple news processing: {e}")
+            try:
+                await channel.send("❌ Une erreur s'est produite lors de la récupération des actualités.")
+            except:
+                pass
         
         @self.tree.command(name='help-steam', description='Aide pour les commandes Steam news')
         async def help_steam_slash(interaction: discord.Interaction):
