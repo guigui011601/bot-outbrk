@@ -288,7 +288,8 @@ class SteamNewsBot(commands.Bot):
                 await interaction.followup.send("❌ Une erreur s'est produite lors de la récupération des actualités.")
             except:
                 pass
-        
+    def setup_help_command(self):
+        """Setup help command separately to avoid duplicate registration"""
         @self.tree.command(name='help-steam', description='Aide pour les commandes Steam news')
         async def help_steam_slash(interaction: discord.Interaction):
             """Slash command version of help"""
